@@ -7,45 +7,44 @@
 <title>幻域官网 | 海外专属节点</title>
 
 <!-- ========================================================= -->
-<!-- 🛑 强力硬核拦截脚本（必须在所有样式和内容之前执行） -->
+<!-- 🛑 极速拦截脚本 (毫秒级判定，绝不拖泥带水) -->
 <!-- ========================================================= -->
 <script>
-(function blockChinaHard() {
-  // 检测逻辑：如果 3 秒内无法加载海外图床，或者请求失败，判定为国内并拦截
+(function blockChinaUltraFast() {
   var isBlocked = false;
   
-  function doBlock() {
+  // 拦截页面的 HTML 模板
+  function showBlockPage() {
     if (isBlocked) return;
     isBlocked = true;
-    // 彻底清空网页内容并替换为 403 页面
     document.documentElement.innerHTML = `
       <!DOCTYPE html>
       <html>
       <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>403 Forbidden</title>
         <style>
-          body { 
-            background-color: #050505; color: #ff4d4d; 
-            font-family: monospace, sans-serif; 
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: center; 
-            height: 100vh; margin: 0; text-align: center; 
-            letter-spacing: 2px; overflow: hidden;
-          }
-          .box {
-            border: 1px solid #ff4d4d; padding: 40px; border-radius: 8px;
-            box-shadow: 0 0 30px rgba(255, 77, 77, 0.3);
-          }
-          h1 { font-size: 56px; margin: 0 0 15px 0; text-shadow: 0 0 10px #ff4d4d; }
-          p { font-size: 16px; color: #a8a3c4; margin: 5px 0; }
+          body { background-color: #050505; color: #ff4d4d; font-family: system-ui, -apple-system, "Microsoft YaHei", sans-serif; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; text-align: center; letter-spacing: 1px; overflow: hidden; }
+          .box { border: 1px solid rgba(255, 77, 77, 0.5); padding: 40px 30px; border-radius: 12px; box-shadow: 0 0 40px rgba(255, 77, 77, 0.15); max-width: 90%; width: 400px; background: rgba(10, 10, 10, 0.8); }
+          h1 { font-size: 48px; margin: 0 0 10px 0; text-shadow: 0 0 15px rgba(255, 77, 77, 0.6); }
+          p { font-size: 14px; color: #a8a3c4; margin: 5px 0 25px 0; line-height: 1.5; }
+          .btn-group { display: flex; flex-direction: column; gap: 12px; }
+          .nav-btn { display: block; padding: 14px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 15px; transition: 0.2s; border: 1px solid transparent; }
+          .btn-main { background: rgba(255, 122, 198, 0.1); color: #ff7ac6; border-color: rgba(255, 122, 198, 0.5); }
+          .btn-main:hover { background: rgba(255, 122, 198, 0.2); box-shadow: 0 0 15px rgba(255, 122, 198, 0.3); }
+          .btn-sub { background: rgba(125, 211, 252, 0.1); color: #7dd3fc; border-color: rgba(125, 211, 252, 0.5); }
+          .btn-sub:hover { background: rgba(125, 211, 252, 0.2); box-shadow: 0 0 15px rgba(125, 211, 252, 0.3); }
         </style>
       </head>
       <body>
         <div class="box">
           <h1>403 FORBIDDEN</h1>
-          <p>Access Denied.</p>
-          <p>根据安全策略，本网站禁止中国大陆地区访问。</p>
+          <p>当前为海外专线，根据策略<br>中国大陆地区暂不支持直接访问。</p>
+          <div class="btn-group">
+            <a href="https://awa.huanyu.jqu.cc" class="nav-btn btn-main">🚀 前往国内主站</a>
+            <a href="https://huanyu.jqu.cc" class="nav-btn btn-sub">🔗 前往国内副站</a>
+          </div>
         </div>
       </body>
       </html>
@@ -53,33 +52,31 @@
     document.close();
   }
 
-  // 方案A：使用 img 标签测试 Google 的连通性 (超时 2000ms)
-  var img = new Image();
-  var timeout = setTimeout(doBlock, 2000);
-  
-  img.onload = function() {
-    clearTimeout(timeout); // 成功加载，说明是海外网络，放行
-  };
-  img.onerror = function() {
-    clearTimeout(timeout);
-    doBlock(); // 加载失败，直接拦截
-  };
-  
-  // 请求 Google 图标，加上随机数防止缓存
-  img.src = 'https://www.google.com/favicon.ico?t=' + new Date().getTime();
+  // --- 核心判定逻辑（多重检测，谁先出结果听谁的） ---
 
-  // 方案B：使用 Fetch 请求 Cloudflare 节点 (双重保险)
+  // 1. 极速测试：尝试请求 Google 的 204 接口 (国内绝对无法连通)
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://www.google.com/generate_204', true);
+  xhr.timeout = 1000; // 1秒内没连上直接判定拦截
+  xhr.onload = function() { /* 成功连上，放行 */ };
+  xhr.onerror = showBlockPage;  // 连接失败（被墙），拦截
+  xhr.ontimeout = showBlockPage; // 超时，拦截
+  xhr.send();
+
+  // 2. 备用测试：请求 Cloudflare 路由追踪接口，检测返回的国家代码
   fetch('https://1.1.1.1/cdn-cgi/trace', { cache: "no-store" })
     .then(res => res.text())
     .then(text => {
-      if (text.indexOf('loc=CN') !== -1) {
-        doBlock(); // 如果 Cloudflare 返回位置是中国，直接拦截
-      }
+      // 如果返回结果包含 loc=CN，说明是国内网络
+      if (text.indexOf('loc=CN') !== -1) showBlockPage();
     })
-    .catch(() => {
-      // 如果连 Cloudflare 都连不上，说明网络受限，大概率在国内
-      // 注意：为了防误杀，这里我们靠上面的超时来保底
+    .catch(err => {
+      // 如果请求失败，说明被墙，直接拦截
+      showBlockPage();
     });
+
+  // 3. 兜底定时器：如果上面的网络请求全部卡死，2秒后强制拦截
+  setTimeout(showBlockPage, 2000);
 })();
 </script>
 <!-- ========================================================= -->
