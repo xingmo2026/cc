@@ -25,7 +25,24 @@
 body { background-color: var(--bg); color: var(--text); line-height: 1.5; overflow-x: hidden; }
 a { text-decoration: none; color: inherit; }
 
+/* 隐藏正常主内容和广告 */
 #main-content { display: none; min-height: 100vh; }
+.top-ad { display: none; } /* 初始隐藏，防止闪烁 */
+
+/* ========================================================= */
+/* ⏳ 新增：全屏加载遮罩 (防止一开始白屏) */
+/* ========================================================= */
+#loading-overlay {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background-color: var(--bg); z-index: 999999;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  color: var(--text-muted); font-size: 14px;
+}
+.spinner {
+  width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--primary);
+  border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 12px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* ========================================================= */
 /* 🛑 拦截面板 */
@@ -90,7 +107,6 @@ a { text-decoration: none; color: inherit; }
 .bottom-ad .ad-text h4 { font-size: 16px; color: var(--text); margin-bottom: 4px; }
 .bottom-ad .ad-text p { font-size: 13px; color: var(--text-muted); }
 
-/* 新闻列表样式 */
 .news-list { display: flex; flex-direction: column; gap: 10px; }
 .news-item { background: var(--card-bg); border: 1px solid var(--border); padding: 12px 16px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
 .news-item:hover { border-color: #52525b; }
@@ -99,7 +115,6 @@ a { text-decoration: none; color: inherit; }
 .news-title { font-size: 13px; color: var(--text); }
 .news-time { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
 
-/* 网站通用样式 */
 .section { padding: 40px 0; border-bottom: 1px solid var(--border); }
 .section:last-child { border-bottom: none; }
 .section-title { font-size: 18px; font-weight: 600; margin-bottom: 20px; color: var(--text); display: flex; align-items: center; gap: 8px;}
@@ -122,11 +137,9 @@ a { text-decoration: none; color: inherit; }
 .status-num { font-size: 18px; font-weight: 700; color: var(--text); font-family: monospace; }
 .status-on { color: var(--success); font-weight: 500; font-size: 12px; }
 
-/* 📱 手机端保持左右双广告 */
 @media (max-width: 768px) { 
   .nav-links { display: none; } 
   .nav { top: 0; } 
-  .top-ad { display: none; }
   .layout-wrapper { padding: 70px 5px 20px; gap: 8px; flex-direction: row; }
   .side-column { width: 80px; }
   .side-ad { padding: 8px; text-align: center; } 
@@ -136,14 +149,16 @@ a { text-decoration: none; color: inherit; }
 }
 </style>
 </head>
-<body><!-- ========================================================= -->
+<body><!-- ⏳ 加载遮罩，防止一开始闪烁空白 -->
+<div id="loading-overlay">
+  <div class="spinner"></div>
+  <div>正在检查网络环境...</div>
+</div>
+
 <!-- 📢 顶部广告 -->
-<!-- ========================================================= -->
 <div class="top-ad">📢 广告：服务器长期招新，点击加入 QQ 群获取福利</div>
 
-<!-- ========================================================= -->
 <!-- 🛑 拦截面板 -->
-<!-- ========================================================= -->
 <div id="block-panel">
   <div class="box">
     <h1>403 FORBIDDEN</h1>
@@ -161,16 +176,12 @@ a { text-decoration: none; color: inherit; }
   </div>
 </div>
 
-<!-- ========================================================= -->
-<!-- 🧩 验证弹窗 (不显示进度) -->
-<!-- ========================================================= -->
+<!-- 🧩 验证弹窗 -->
 <div id="captcha-overlay">
   <div class="captcha-box" id="captchaBox"></div>
 </div>
 
-<!-- ========================================================= -->
 <!-- 🌐 正常网页内容 -->
-<!-- ========================================================= -->
 <div id="main-content">
   <nav class="nav">
     <div class="nav-brand">幻域</div>
@@ -217,12 +228,9 @@ a { text-decoration: none; color: inherit; }
         </div>
       </section>
 
-      <!-- 🌟 15条最新新闻/广告 -->
       <section class="section" id="news">
         <h2 class="section-title">📰 最新资讯与推荐</h2>
-        <div class="news-list" id="newsList">
-          <!-- 通过 JS 动态生成 15 条 -->
-        </div>
+        <div class="news-list" id="newsList"></div>
       </section>
 
       <section class="section" id="connect">
@@ -243,7 +251,6 @@ a { text-decoration: none; color: inherit; }
         </div>
       </section>
 
-      <!-- 底部横幅广告 -->
       <div class="bottom-ad">
         <div class="ad-text">
           <h4>🎮 幻域周边商城特惠</h4>
@@ -266,26 +273,29 @@ a { text-decoration: none; color: inherit; }
   </footer>
 </div>
 
-<!-- ========================================================= -->
 <!-- ⚙️ 核心脚本 -->
-<!-- ========================================================= -->
 <script>
 var isVerified = false;
 var isBlocked = false;
 var mainContent = document.getElementById('main-content');
 var blockPanel = document.getElementById('block-panel');
+var loadingOverlay = document.getElementById('loading-overlay');
+var topAd = document.querySelector('.top-ad');
 
 function showContent() {
   if (isBlocked && !isVerified) return; 
+  loadingOverlay.style.display = 'none'; // 关闭加载遮罩
   mainContent.style.display = 'block';  
+  topAd.style.display = 'flex'; // 显示广告条
   blockPanel.style.display = 'none';    
   fetchAllMCStatus();      
-  renderNews(); // 渲染新闻
+  renderNews(); 
 }
 
 function showBlock() {
   if (isVerified) return; 
   isBlocked = true;
+  loadingOverlay.style.display = 'none'; // 关闭加载遮罩
   mainContent.style.display = 'none';   
   blockPanel.style.display = 'flex';    
 }
@@ -304,11 +314,12 @@ fetch('https://1.1.1.1/cdn-cgi/trace', { cache: "no-store" })
   .then(text => { if (hasResponded) return; hasResponded = true; if (text.indexOf('loc=CN') !== -1) showBlock(); else showContent(); })
   .catch(err => { if (!hasResponded) { hasResponded = true; showBlock(); } });
 
+// 兜底超时
 setTimeout(function() { if (!hasResponded) { hasResponded = true; showBlock(); } }, 2500);
 
 
 // =========================================================
-// 🧩 20 重随机现代验证逻辑 (无进度条)
+// 🧩 20 重随机现代验证逻辑
 // =========================================================
 let currentLevel = 1;
 const TOTAL_LEVELS = 20;
@@ -339,284 +350,120 @@ function passLevel() {
 }
 
 function renderCaptchaLevel(level) {
-  // 头部只有图标，不显示任何进度
-  let html = `
-    <div class="captcha-header">
-      <span>🛡️ 安全验证</span>
-    </div>
-  `;
-
+  let html = `<div class="captcha-header"><span>🛡️ 安全验证</span></div>`;
   let type;
   do { type = Math.floor(Math.random() * 20) + 1; } while (usedTypes.includes(type));
   usedTypes.push(type);
 
   if (type === 1) {
-    html += `<p class="captcha-subtitle">拖动滑块拼合缺口</p>
-      <div class="cap-slider-wrap" id="sl-wrap"><div class="cap-slider-bg" id="sl-bg"></div><div class="cap-slider-text" id="sl-text">向右拖动</div><div class="cap-slider-btn" id="sl-btn">→</div></div>`;
-    captchaBox.innerHTML = html;
-    initSlider();
+    html += `<p class="captcha-subtitle">拖动滑块拼合缺口</p><div class="cap-slider-wrap" id="sl-wrap"><div class="cap-slider-bg" id="sl-bg"></div><div class="cap-slider-text" id="sl-text">向右拖动</div><div class="cap-slider-btn" id="sl-btn">→</div></div>`;
+    captchaBox.innerHTML = html; initSlider();
   } 
   else if (type === 2) {
-    html += `<p class="captcha-subtitle">请长按下方按钮 2 秒</p>
-      <div class="cap-hold-btn" id="hold-btn"><div class="cap-hold-progress" id="hold-prog"></div><span style="position:relative;z-index:1;">长按我</span></div>`;
-    captchaBox.innerHTML = html;
-    initHold();
+    html += `<p class="captcha-subtitle">请长按下方按钮 2 秒</p><div class="cap-hold-btn" id="hold-btn"><div class="cap-hold-progress" id="hold-prog"></div><span style="position:relative;z-index:1;">长按我</span></div>`;
+    captchaBox.innerHTML = html; initHold();
   }
   else if (type === 3) {
-    let n1 = Math.floor(Math.random() * 20) + 10;
-    let n2 = Math.floor(Math.random() * 20) + 10;
-    let sum = n1 + n2;
-    html += `<p class="captcha-subtitle">计算：${n1} + ${n2} = ?</p>
-      <input type="number" class="cap-input" id="math-input" placeholder="输入答案">
-      <button class="cap-btn" onclick="if(document.getElementById('math-input').value == ${sum}) passLevel(); else alert('算错了！')">提交答案</button>`;
+    let n1 = Math.floor(Math.random() * 20) + 10; let n2 = Math.floor(Math.random() * 20) + 10; let sum = n1 + n2;
+    html += `<p class="captcha-subtitle">计算：${n1} + ${n2} = ?</p><input type="number" class="cap-input" id="math-input" placeholder="输入答案"><button class="cap-btn" onclick="if(document.getElementById('math-input').value == ${sum}) passLevel(); else alert('算错了！')">提交答案</button>`;
     captchaBox.innerHTML = html;
   }
   else if (type === 4) {
-    html += `<p class="captcha-subtitle">请点击绿颜色的方块</p>
-      <div style="display:flex; gap:15px; justify-content:center;">
-        <div class="cap-btn" style="width:60px; height:60px; background:#ef4444; padding:0;" onclick="alert('点错了！')"></div>
-        <div class="cap-btn" style="width:60px; height:60px; background:#3b82f6; padding:0;" onclick="alert('点错了！')"></div>
-        <div class="cap-btn" style="width:60px; height:60px; background:#4ade80; padding:0;" onclick="passLevel()"></div>
-        <div class="cap-btn" style="width:60px; height:60px; background:#eab308; padding:0;" onclick="alert('点错了！')"></div>
-      </div>`;
+    html += `<p class="captcha-subtitle">请点击绿颜色的方块</p><div style="display:flex; gap:15px; justify-content:center;"><div class="cap-btn" style="width:60px; height:60px; background:#ef4444; padding:0;" onclick="alert('点错了！')"></div><div class="cap-btn" style="width:60px; height:60px; background:#3b82f6; padding:0;" onclick="alert('点错了！')"></div><div class="cap-btn" style="width:60px; height:60px; background:#4ade80; padding:0;" onclick="passLevel()"></div><div class="cap-btn" style="width:60px; height:60px; background:#eab308; padding:0;" onclick="alert('点错了！')"></div></div>`;
     captchaBox.innerHTML = html;
   }
   else if (type === 5) {
-    let words = ["HUANYU", "MC", "FANTASY", "SERVER", "GAME", "PLAY"];
-    let target = words[Math.floor(Math.random() * words.length)];
-    html += `<p class="captcha-subtitle">请在下方输入 <b>${target}</b></p>
-      <input type="text" class="cap-input" id="txt-input" placeholder="不区分大小写">
-      <button class="cap-btn" onclick="if(document.getElementById('txt-input').value.toUpperCase() === '${target}') passLevel(); else alert('输入错误！')">验证</button>`;
+    let words = ["HUANYU", "MC", "FANTASY", "SERVER", "GAME", "PLAY"]; let target = words[Math.floor(Math.random() * words.length)];
+    html += `<p class="captcha-subtitle">请在下方输入 <b>${target}</b></p><input type="text" class="cap-input" id="txt-input" placeholder="不区分大小写"><button class="cap-btn" onclick="if(document.getElementById('txt-input').value.toUpperCase() === '${target}') passLevel(); else alert('输入错误！')">验证</button>`;
     captchaBox.innerHTML = html;
   }
   else if (type === 6) {
-    html += `<p class="captcha-subtitle">请点击指向左边的箭头</p>
-      <div style="display:flex; gap:20px; justify-content:center; font-size:28px;">
-        <div style="cursor:pointer; padding:10px;" onclick="passLevel()">←</div>
-        <div style="cursor:pointer; padding:10px;" onclick="alert('点错了！')">↑</div>
-        <div style="cursor:pointer; padding:10px;" onclick="alert('点错了！')">→</div>
-        <div style="cursor:pointer; padding:10px;" onclick="alert('点错了！')">↓</div>
-      </div>`;
+    html += `<p class="captcha-subtitle">请点击指向左边的箭头</p><div style="display:flex; gap:20px; justify-content:center; font-size:28px;"><div style="cursor:pointer; padding:10px;" onclick="passLevel()">←</div><div style="cursor:pointer; padding:10px;" onclick="alert('点错了！')">↑</div><div style="cursor:pointer; padding:10px;" onclick="alert('点错了！')">→</div><div style="cursor:pointer; padding:10px;" onclick="alert('点错了！')">↓</div></div>`;
     captchaBox.innerHTML = html;
   }
   else if (type === 7) {
-    html += `<p class="captcha-subtitle">请点击数字最大的方块</p>
-      <div class="cap-words">
-        <div class="cap-word" onclick="alert('选错了！')">56</div>
-        <div class="cap-word" onclick="alert('选错了！')">78</div>
-        <div class="cap-word" onclick="passLevel()">99</div>
-        <div class="cap-word" onclick="alert('选错了！')">34</div>
-      </div>`;
+    html += `<p class="captcha-subtitle">请点击数字最大的方块</p><div class="cap-words"><div class="cap-word" onclick="alert('选错了！')">56</div><div class="cap-word" onclick="alert('选错了！')">78</div><div class="cap-word" onclick="passLevel()">99</div><div class="cap-word" onclick="alert('选错了！')">34</div></div>`;
     captchaBox.innerHTML = html;
   }
   else if (type === 8) {
-    html += `<p class="captcha-subtitle">请点击属于元音字母的方块 (a,e,i,o,u)</p>
-      <div class="cap-words">
-        <div class="cap-word" onclick="alert('选错了！')">B</div>
-        <div class="cap-word" onclick="passLevel()">O</div>
-        <div class="cap-word" onclick="alert('选错了！')">X</div>
-        <div class="cap-word" onclick="alert('选错了！')">M</div>
-      </div>`;
+    html += `<p class="captcha-subtitle">请点击属于元音字母的方块 (a,e,i,o,u)</p><div class="cap-words"><div class="cap-word" onclick="alert('选错了！')">B</div><div class="cap-word" onclick="passLevel()">O</div><div class="cap-word" onclick="alert('选错了！')">X</div><div class="cap-word" onclick="alert('选错了！')">M</div></div>`;
     captchaBox.innerHTML = html;
   }
   else if (type === 9) {
-    html += `<p class="captcha-subtitle">请点击下方的动物图标</p>
-      <div class="cap-words">
-        <div class="cap-word" onclick="alert('选错了！')">🍎</div>
-        <div class="cap-word" onclick="alert('选错了！')">🚗</div>
-        <div class="cap-word" onclick="passLevel()">🐱</div>
-        <div class="cap-word" onclick="alert('选错了！')">🌲</div>
-      </div>`;
+    html += `<p class="captcha-subtitle">请点击下方的动物图标</p><div class="cap-words"><div class="cap-word" onclick="alert('选错了！')">🍎</div><div class="cap-word" onclick="alert('选错了！')">🚗</div><div class="cap-word" onclick="passLevel()">🐱</div><div class="cap-word" onclick="alert('选错了！')">🌲</div></div>`;
     captchaBox.innerHTML = html;
   }
   else if (type === 10) {
-    html += `<p class="captcha-subtitle">“苹果”的英文单词是？</p>
-      <input type="text" class="cap-input" id="word-input" placeholder="输入英文">
-      <button class="cap-btn" onclick="if(document.getElementById('word-input').value.toLowerCase() === 'apple') passLevel(); else alert('拼写错误！')">提交</button>`;
+    html += `<p class="captcha-subtitle">“苹果”的英文单词是？</p><input type="text" class="cap-input" id="word-input" placeholder="输入英文"><button class="cap-btn" onclick="if(document.getElementById('word-input').value.toLowerCase() === 'apple') passLevel(); else alert('拼写错误！')">提交</button>`;
     captchaBox.innerHTML = html;
   }
   else if (type === 11) {
-    html += `<p class="captcha-subtitle">请点击一个双数 (偶数)</p>
-      <div class="cap-words">
-        <div class="cap-word" onclick="alert('选错了！')">7</div>
-        <div class="cap-word" onclick="alert('选错了！')">13</div>
-        <div class="cap-word" onclick="passLevel()">42</div>
-        <div class="cap-word" onclick="alert('选错了！')">95</div>
-      </div>`;
+    html += `<p class="captcha-subtitle">请点击一个双数 (偶数)</p><div class="cap-words"><div class="cap-word" onclick="alert('选错了！')">7</div><div class="cap-word" onclick="alert('选错了！')">13</div><div class="cap-word" onclick="passLevel()">42</div><div class="cap-word" onclick="alert('选错了！')">95</div></div>`;
     captchaBox.innerHTML = html;
   }
   else if (type === 12) {
-    html += `<p class="captcha-subtitle">请点击代表“晴天”的图标</p>
-      <div class="cap-words">
-        <div class="cap-word" onclick="alert('选错了！')">🌧️</div>
-        <div class="cap-word" onclick="passLevel()">☀️</div>
-        <div class="cap-word" onclick="alert('选错了！')">❄️</div>
-      </div>`;
+    html += `<p class="captcha-subtitle">请点击代表“晴天”的图标</p><div class="cap-words"><div class="cap-word" onclick="alert('选错了！')">🌧️</div><div class="cap-word" onclick="passLevel()">☀️</div><div class="cap-word" onclick="alert('选错了！')">❄️</div></div>`;
     captchaBox.innerHTML = html;
   }
   else if (type === 13) {
-    html += `<p class="captcha-subtitle">以下哪个是编程语言？</p>
-      <div class="cap-words">
-        <div class="cap-word" onclick="alert('选错了！')">HTML</div>
-        <div class="cap-word" onclick="passLevel()">Python</div>
-        <div class="cap-word" onclick="alert('选错了！')">HTTP</div>
-      </div>`;
+    html += `<p class="captcha-subtitle">以下哪个是编程语言？</p><div class="cap-words"><div class="cap-word" onclick="alert('选错了！')">HTML</div><div class="cap-word" onclick="passLevel()">Python</div><div class="cap-word" onclick="alert('选错了！')">HTTP</div></div>`;
     captchaBox.innerHTML = html;
   }
   else if (type === 14) {
-    html += `<p class="captcha-subtitle">以下哪个是八大行星之一？</p>
-      <div class="cap-words">
-        <div class="cap-word" onclick="alert('选错了！')">月球</div>
-        <div class="cap-word" onclick="passLevel()">火星</div>
-        <div class="cap-word" onclick="alert('选错了！')">太阳</div>
-      </div>`;
+    html += `<p class="captcha-subtitle">以下哪个是八大行星之一？</p><div class="cap-words"><div class="cap-word" onclick="alert('选错了！')">月球</div><div class="cap-word" onclick="passLevel()">火星</div><div class="cap-word" onclick="alert('选错了！')">太阳</div></div>`;
     captchaBox.innerHTML = html;
   }
   else if (type === 15) {
-    html += `<p class="captcha-subtitle">请点击数字最小的方块</p>
-      <div class="cap-words">
-        <div class="cap-word" onclick="passLevel()">3</div>
-        <div class="cap-word" onclick="alert('选错了！')">12</div>
-        <div class="cap-word" onclick="alert('选错了！')">56</div>
-      </div>`;
+    html += `<p class="captcha-subtitle">请点击数字最小的方块</p><div class="cap-words"><div class="cap-word" onclick="passLevel()">3</div><div class="cap-word" onclick="alert('选错了！')">12</div><div class="cap-word" onclick="alert('选错了！')">56</div></div>`;
     captchaBox.innerHTML = html;
   }
   else if (type === 16) {
-    html += `<p class="captcha-subtitle">“1 + 1” 等于几？</p>
-      <input type="number" class="cap-input" id="easy-math" placeholder="输入数字">
-      <button class="cap-btn" onclick="if(document.getElementById('easy-math').value == 2) passLevel(); else alert('算错了！')">提交</button>`;
+    html += `<p class="captcha-subtitle">“1 + 1” 等于几？</p><input type="number" class="cap-input" id="easy-math" placeholder="输入数字"><button class="cap-btn" onclick="if(document.getElementById('easy-math').value == 2) passLevel(); else alert('算错了！')">提交</button>`;
     captchaBox.innerHTML = html;
   }
   else if (type === 17) {
-    html += `<p class="captcha-subtitle">请点击红颜色的方块</p>
-      <div style="display:flex; gap:15px; justify-content:center;">
-        <div class="cap-btn" style="width:60px; height:60px; background:#3b82f6; padding:0;" onclick="alert('点错了！')"></div>
-        <div class="cap-btn" style="width:60px; height:60px; background:#ef4444; padding:0;" onclick="passLevel()"></div>
-        <div class="cap-btn" style="width:60px; height:60px; background:#4ade80; padding:0;" onclick="alert('点错了！')"></div>
-      </div>`;
+    html += `<p class="captcha-subtitle">请点击红颜色的方块</p><div style="display:flex; gap:15px; justify-content:center;"><div class="cap-btn" style="width:60px; height:60px; background:#3b82f6; padding:0;" onclick="alert('点错了！')"></div><div class="cap-btn" style="width:60px; height:60px; background:#ef4444; padding:0;" onclick="passLevel()"></div><div class="cap-btn" style="width:60px; height:60px; background:#4ade80; padding:0;" onclick="alert('点错了！')"></div></div>`;
     captchaBox.innerHTML = html;
   }
   else if (type === 18) {
-    html += `<p class="captcha-subtitle">以下哪个是水果？</p>
-      <div class="cap-words">
-        <div class="cap-word" onclick="alert('选错了！')">白菜</div>
-        <div class="cap-word" onclick="passLevel()">香蕉</div>
-        <div class="cap-word" onclick="alert('选错了！')">牛肉</div>
-      </div>`;
+    html += `<p class="captcha-subtitle">以下哪个是水果？</p><div class="cap-words"><div class="cap-word" onclick="alert('选错了！')">白菜</div><div class="cap-word" onclick="passLevel()">香蕉</div><div class="cap-word" onclick="alert('选错了！')">牛肉</div></div>`;
     captchaBox.innerHTML = html;
   }
   else if (type === 19) {
-    html += `<p class="captcha-subtitle">请在下方输入“123”</p>
-      <input type="text" class="cap-input" id="num-input" placeholder="输入数字">
-      <button class="cap-btn" onclick="if(document.getElementById('num-input').value === '123') passLevel(); else alert('输入错误！')">验证</button>`;
+    html += `<p class="captcha-subtitle">请在下方输入“123”</p><input type="text" class="cap-input" id="num-input" placeholder="输入数字"><button class="cap-btn" onclick="if(document.getElementById('num-input').value === '123') passLevel(); else alert('输入错误！')">验证</button>`;
     captchaBox.innerHTML = html;
   }
   else if (type === 20) {
-    html += `<p class="captcha-subtitle" style="color:#4ade80;">🎉 恭喜您通过所有验证！</p>
-      <button class="cap-btn" style="background:var(--text); color:#000; font-weight:bold;" onclick="passLevel()">进入网站</button>`;
+    html += `<p class="captcha-subtitle" style="color:#4ade80;">🎉 恭喜您通过所有验证！</p><button class="cap-btn" style="background:var(--text); color:#000; font-weight:bold;" onclick="passLevel()">进入网站</button>`;
     captchaBox.innerHTML = html;
   }
 }
 
 function initSlider() {
-  const wrap = document.getElementById('sl-wrap');
-  const btn = document.getElementById('sl-btn');
-  const bg = document.getElementById('sl-bg');
+  const wrap = document.getElementById('sl-wrap'), btn = document.getElementById('sl-btn'), bg = document.getElementById('sl-bg');
   let isDragging = false, startX = 0, maxDrag = wrap.clientWidth - btn.clientWidth;
-  
-  btn.addEventListener('mousedown', start);
-  btn.addEventListener('touchstart', start, {passive: false});
-  
-  function start(e) {
-    isDragging = true;
-    startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
-    document.addEventListener('mousemove', move);
-    document.addEventListener('touchmove', move, {passive:false});
-    document.addEventListener('mouseup', end);
-    document.addEventListener('touchend', end);
-  }
-  
-  function move(e) {
-    if(!isDragging) return;
-    let x = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
-    let delta = x - startX;
-    if(delta > maxDrag) delta = maxDrag;
-    if(delta > 0) {
-      btn.style.left = delta + 'px';
-      bg.style.width = (delta + btn.clientWidth) + 'px';
-    }
-  }
-  
-  function end() {
-    if(!isDragging) return;
-    isDragging = false;
-    document.removeEventListener('mousemove', move);
-    document.removeEventListener('touchmove', move);
-    document.removeEventListener('mouseup', end);
-    document.removeEventListener('touchend', end);
-    
-    let currentLeft = parseInt(btn.style.left) || 0;
-    if(currentLeft >= maxDrag * 0.9) { passLevel(); } 
-    else { btn.style.left = '0px'; bg.style.width = '44px'; }
-  }
+  btn.addEventListener('mousedown', start); btn.addEventListener('touchstart', start, {passive: false});
+  function start(e) { isDragging = true; startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX; document.addEventListener('mousemove', move); document.addEventListener('touchmove', move, {passive:false}); document.addEventListener('mouseup', end); document.addEventListener('touchend', end); }
+  function move(e) { if(!isDragging) return; let x = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX; let delta = x - startX; if(delta > maxDrag) delta = maxDrag; if(delta > 0) { btn.style.left = delta + 'px'; bg.style.width = (delta + btn.clientWidth) + 'px'; } }
+  function end() { if(!isDragging) return; isDragging = false; document.removeEventListener('mousemove', move); document.removeEventListener('touchmove', move); document.removeEventListener('mouseup', end); document.removeEventListener('touchend', end); let currentLeft = parseInt(btn.style.left) || 0; if(currentLeft >= maxDrag * 0.9) { passLevel(); } else { btn.style.left = '0px'; bg.style.width = '44px'; } }
 }
 
 function initHold() {
-  const btn = document.getElementById('hold-btn');
-  const prog = document.getElementById('hold-prog');
-  let pressStart, req;
-  
-  function start(e) {
-    e.preventDefault();
-    pressStart = Date.now();
-    req = requestAnimationFrame(update);
-  }
-  
-  function update() {
-    let elapsed = Date.now() - pressStart;
-    let p = Math.min((elapsed / 2000) * 100, 100);
-    prog.style.width = p + '%';
-    if(p < 100) { req = requestAnimationFrame(update); } 
-    else { passLevel(); }
-  }
-  
-  function cancel() {
-    cancelAnimationFrame(req);
-    prog.style.width = '0%';
-  }
-  
-  btn.addEventListener('mousedown', start);
-  btn.addEventListener('touchstart', start, {passive:false});
-  btn.addEventListener('mouseup', cancel);
-  btn.addEventListener('mouseleave', cancel);
-  btn.addEventListener('touchend', cancel);
+  const btn = document.getElementById('hold-btn'), prog = document.getElementById('hold-prog'); let pressStart, req;
+  function start(e) { e.preventDefault(); pressStart = Date.now(); req = requestAnimationFrame(update); }
+  function update() { let elapsed = Date.now() - pressStart; let p = Math.min((elapsed / 2000) * 100, 100); prog.style.width = p + '%'; if(p < 100) { req = requestAnimationFrame(update); } else { passLevel(); } }
+  function cancel() { cancelAnimationFrame(req); prog.style.width = '0%'; }
+  btn.addEventListener('mousedown', start); btn.addEventListener('touchstart', start, {passive:false}); btn.addEventListener('mouseup', cancel); btn.addEventListener('mouseleave', cancel); btn.addEventListener('touchend', cancel);
 }
 
-// =========================================================
-// 📊 服务器状态查询
-// =========================================================
 async function getServerStatus(apiUrl, playersElId, statusElId) {
-  const statusEl = document.getElementById(statusElId);
-  const playersEl = document.getElementById(playersElId);
+  const statusEl = document.getElementById(statusElId), playersEl = document.getElementById(playersElId);
   if (!statusEl || !playersEl) return;
-
   try {
-    const res = await fetch(apiUrl, { cache: "no-store" });
-    const data = await res.json();
-    if (data && data.online) {
-      statusEl.textContent = "● 运行中";
-      statusEl.style.color = "var(--success)";
-      playersEl.textContent = data.players?.online || 0;
-    } else {
-      statusEl.textContent = "● 维护中";
-      statusEl.style.color = "#f59e0b";
-      playersEl.textContent = "--";
-    }
-  } catch (error) {
-    statusEl.textContent = "● 获取失败";
-    statusEl.style.color = "#ef4444";
-    playersEl.textContent = "--";
-  }
+    const res = await fetch(apiUrl, { cache: "no-store" }); const data = await res.json();
+    if (data && data.online) { statusEl.textContent = "● 运行中"; statusEl.style.color = "var(--success)"; playersEl.textContent = data.players?.online || 0; } 
+    else { statusEl.textContent = "● 维护中"; statusEl.style.color = "#f59e0b"; playersEl.textContent = "--"; }
+  } catch (error) { statusEl.textContent = "● 获取失败"; statusEl.style.color = "#ef4444"; playersEl.textContent = "--"; }
 }
 
 function fetchAllMCStatus() {
@@ -624,47 +471,23 @@ function fetchAllMCStatus() {
   getServerStatus("https://api.mcsrvstat.us/3/hmfree.tooo.top:20063", "players-hm", "status-hm");
 }
 
-// =========================================================
-// 📰 渲染 15 条最新新闻/广告
-// =========================================================
 const newsData = [
-  "Minecraft 1.21 全新版本特性爆料，自动合成台登场",
-  "Hypixel 服务器在线人数突破 20 万，创历史新高",
-  "幻域官方周边商城今日上线，首单立减 20 元",
-  "2B2T 无政府服务器出现神秘巨型建筑",
-  "如何快速在基岩版与 Java 版之间跨平台联机",
-  "幻域服务器国庆活动预告，海量钻石等你拿",
-  "玩家在 Minecraft 中耗时 3 年还原真实城市",
-  "推荐 5 款提升生存体验的轻量级辅助模组",
-  "Mojang 官方宣布下个版本将优化区块加载速度",
-  "你绝对不知道的 10 个 Minecraft 隐藏彩蛋",
-  "全新光影包发布，让你的世界美如画",
-  "幻域主服即将迎来一周年庆典，欢迎回归",
-  "盘点那些年我们在 MC 里造过的奇葩建筑",
-  "如何有效防止苦力怕炸家？老玩家教你几招",
+  "Minecraft 1.21 全新版本特性爆料，自动合成台登场", "Hypixel 服务器在线人数突破 20 万，创历史新高",
+  "幻域官方周边商城今日上线，首单立减 20 元", "2B2T 无政府服务器出现神秘巨型建筑",
+  "如何快速在基岩版与 Java 版之间跨平台联机", "幻域服务器国庆活动预告，海量钻石等你拿",
+  "玩家在 Minecraft 中耗时 3 年还原真实城市", "推荐 5 款提升生存体验的轻量级辅助模组",
+  "Mojang 官方宣布下个版本将优化区块加载速度", "你绝对不知道的 10 个 Minecraft 隐藏彩蛋",
+  "全新光影包发布，让你的世界美如画", "幻域主服即将迎来一周年庆典，欢迎回归",
+  "盘点那些年我们在 MC 里造过的奇葩建筑", "如何有效防止苦力怕炸家？老玩家教你几招",
   "寻找最适合开黑的 Minecraft 小游戏服务器"
 ];
 
 function renderNews() {
-  const newsList = document.getElementById('newsList');
-  if(!newsList) return;
-  
-  // 随机打乱
-  let shuffledNews = [...newsData].sort(() => 0.5 - Math.random());
-  
-  let html = "";
+  const newsList = document.getElementById('newsList'); if(!newsList) return;
+  let shuffledNews = [...newsData].sort(() => 0.5 - Math.random()); let html = "";
   shuffledNews.slice(0, 10).forEach((news, index) => {
-    // 随机生成一个时间（比如 1-12 小时前）
     let hoursAgo = Math.floor(Math.random() * 12) + 1;
-    html += `
-      <div class="news-item">
-        <div class="news-item-left">
-          <span class="news-tag">${index < 3 ? '最新' : '推荐'}</span>
-          <span class="news-title">${news}</span>
-        </div>
-        <span class="news-time">${hoursAgo}小时前</span>
-      </div>
-    `;
+    html += `<div class="news-item"><div class="news-item-left"><span class="news-tag">${index < 3 ? '最新' : '推荐'}</span><span class="news-title">${news}</span></div><span class="news-time">${hoursAgo}小时前</span></div>`;
   });
   newsList.innerHTML = html;
 }
