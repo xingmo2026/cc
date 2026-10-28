@@ -6,305 +6,335 @@
 <meta name="theme-color" content="#0d0b1a">
 <title>幻域官网 | 海外专属节点</title>
 
-<!-- ========================================================= -->
-<!-- 🛑 极速拦截脚本 (毫秒级判定，绝不拖泥带水) -->
-<!-- ========================================================= -->
-<script>
-(function blockChinaUltraFast() {
-  var isBlocked = false;
-  
-  // 拦截页面的 HTML 模板
-  function showBlockPage() {
-    if (isBlocked) return;
-    isBlocked = true;
-    document.documentElement.innerHTML = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>403 Forbidden</title>
-        <style>
-          body { background-color: #050505; color: #ff4d4d; font-family: system-ui, -apple-system, "Microsoft YaHei", sans-serif; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; text-align: center; letter-spacing: 1px; overflow: hidden; }
-          .box { border: 1px solid rgba(255, 77, 77, 0.5); padding: 40px 30px; border-radius: 12px; box-shadow: 0 0 40px rgba(255, 77, 77, 0.15); max-width: 90%; width: 400px; background: rgba(10, 10, 10, 0.8); }
-          h1 { font-size: 48px; margin: 0 0 10px 0; text-shadow: 0 0 15px rgba(255, 77, 77, 0.6); }
-          p { font-size: 14px; color: #a8a3c4; margin: 5px 0 25px 0; line-height: 1.5; }
-          .btn-group { display: flex; flex-direction: column; gap: 12px; }
-          .nav-btn { display: block; padding: 14px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 15px; transition: 0.2s; border: 1px solid transparent; }
-          .btn-main { background: rgba(255, 122, 198, 0.1); color: #ff7ac6; border-color: rgba(255, 122, 198, 0.5); }
-          .btn-main:hover { background: rgba(255, 122, 198, 0.2); box-shadow: 0 0 15px rgba(255, 122, 198, 0.3); }
-          .btn-sub { background: rgba(125, 211, 252, 0.1); color: #7dd3fc; border-color: rgba(125, 211, 252, 0.5); }
-          .btn-sub:hover { background: rgba(125, 211, 252, 0.2); box-shadow: 0 0 15px rgba(125, 211, 252, 0.3); }
-        </style>
-      </head>
-      <body>
-        <div class="box">
-          <h1>403 FORBIDDEN</h1>
-          <p>当前为海外专线，根据策略<br>中国大陆地区暂不支持直接访问。</p>
-          <div class="btn-group">
-            <a href="https://awa.huanyu.jqu.cc" class="nav-btn btn-main">🚀 前往国内主站</a>
-            <a href="https://huanyu.jqu.cc" class="nav-btn btn-sub">🔗 前往国内副站</a>
-          </div>
-        </div>
-      </body>
-      </html>
-    `;
-    document.close();
-  }
-
-  // --- 核心判定逻辑（多重检测，谁先出结果听谁的） ---
-
-  // 1. 极速测试：尝试请求 Google 的 204 接口 (国内绝对无法连通)
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'https://www.google.com/generate_204', true);
-  xhr.timeout = 1000; // 1秒内没连上直接判定拦截
-  xhr.onload = function() { /* 成功连上，放行 */ };
-  xhr.onerror = showBlockPage;  // 连接失败（被墙），拦截
-  xhr.ontimeout = showBlockPage; // 超时，拦截
-  xhr.send();
-
-  // 2. 备用测试：请求 Cloudflare 路由追踪接口，检测返回的国家代码
-  fetch('https://1.1.1.1/cdn-cgi/trace', { cache: "no-store" })
-    .then(res => res.text())
-    .then(text => {
-      // 如果返回结果包含 loc=CN，说明是国内网络
-      if (text.indexOf('loc=CN') !== -1) showBlockPage();
-    })
-    .catch(err => {
-      // 如果请求失败，说明被墙，直接拦截
-      showBlockPage();
-    });
-
-  // 3. 兜底定时器：如果上面的网络请求全部卡死，2秒后强制拦截
-  setTimeout(showBlockPage, 2000);
-})();
-</script>
-<!-- ========================================================= -->
-
 <style>
-/* ===== 基础变量与重置 ===== */
+/* ========================================================= */
+/* 🎨 全局样式与状态控制 */
+/* ========================================================= */
 :root {
-  --bg: #0d0b1a;
-  --card-bg: rgba(255, 255, 255, 0.03);
-  --border: rgba(255, 255, 255, 0.08);
-  --text: #e8e6f5;
-  --text-muted: #a8a3c4;
-  --primary: #ff7ac6;
-  --secondary: #a78bfa;
-  --accent: #7dd3fc;
-  --success: #4ade80;
+  --bg: #0d0b1a; --card-bg: rgba(255, 255, 255, 0.03); --border: rgba(255, 255, 255, 0.08);
+  --text: #e8e6f5; --text-muted: #a8a3c4; --primary: #ff7ac6; --secondary: #a78bfa;
+  --accent: #7dd3fc; --success: #4ade80;
 }
-* { 
-  margin: 0; padding: 0; box-sizing: border-box; 
-  -webkit-tap-highlight-color: transparent; 
-  animation: none !important; transition: none !important;
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; animation: none !important; transition: none !important; }
+
+/* 核心：初始状态下隐藏主体，防止国内用户看到闪屏 */
+body { 
+  font-family: system-ui, -apple-system, "Microsoft YaHei", sans-serif; 
+  background-color: var(--bg); 
+  color: var(--text); 
+  line-height: 1.6; 
+  overflow-x: hidden; 
 }
-body {
-  font-family: system-ui, -apple-system, "Microsoft YaHei", sans-serif;
-  background-color: var(--bg);
-  background-image: 
-    radial-gradient(circle at 15% 50%, rgba(255, 122, 198, 0.08), transparent 40%),
-    radial-gradient(circle at 85% 30%, rgba(167, 139, 250, 0.08), transparent 40%);
+#main-content { 
+  display: none; /* 默认隐藏，等待检测 */
+  background-image: radial-gradient(circle at 15% 50%, rgba(255,122,198,0.08), transparent 40%), radial-gradient(circle at 85% 30%, rgba(167,139,250,0.08), transparent 40%);
   background-attachment: fixed;
-  color: var(--text);
-  line-height: 1.6;
-  overflow-x: hidden;
 }
 a { text-decoration: none; color: inherit; }
 
-/* ===== 顶部导航 ===== */
-.nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 16px 5%;
-  background: rgba(13, 11, 26, 0.85);
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
+/* ========================================================= */
+/* 🛑 拦截面板样式 */
+/* ========================================================= */
+#block-panel { 
+  display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+  background-color: #050505; color: #ff4d4d; z-index: 999999; 
+  flex-direction: column; justify-content: center; align-items: center; text-align: center; 
 }
-.nav-brand {
-  font-size: 22px; font-weight: 800;
-  background: linear-gradient(90deg, var(--primary), var(--secondary));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
+#block-panel .box { border: 1px solid rgba(255,77,77,0.5); padding: 30px; border-radius: 12px; box-shadow: 0 0 40px rgba(255,77,77,0.15); max-width: 90%; width: 420px; background: rgba(10,10,10,0.8); }
+#block-panel h1 { font-size: 42px; margin: 0 0 10px 0; text-shadow: 0 0 15px rgba(255,77,77,0.6); }
+#block-panel p { font-size: 14px; color: #a8a3c4; margin: 5px 0 20px 0; line-height: 1.5; }
+#block-panel .btn-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+#block-panel .nav-btn { display: block; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 14px; border: 1px solid transparent; }
+#block-panel .btn-main { background: rgba(255,122,198,0.1); color: #ff7ac6; border-color: rgba(255,122,198,0.5); }
+#block-panel .btn-sub { background: rgba(125,211,252,0.1); color: #7dd3fc; border-color: rgba(125,211,252,0.5); }
+.divider { display: flex; align-items: center; text-align: center; color: #555; font-size: 12px; margin: 20px 0; }
+.divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #333; }
+.divider::before { margin-right: 10px; }
+.divider::after { margin-left: 10px; }
+.verify-btn { width: 100%; padding: 14px; border-radius: 8px; font-size: 15px; font-weight: bold; background: #1a1a1a; color: #fff; border: 1px solid #333; cursor: pointer; position: relative; overflow: hidden; user-select: none; }
+.verify-btn .progress-bar { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: rgba(74,222,128,0.2); z-index: 1; }
+.verify-btn span { position: relative; z-index: 2; pointer-events: none; }
+.verify-btn.success { border-color: var(--success); color: var(--success); }
+
+/* ========================================================= */
+/* 🖥️ 正常网页样式 (只在放行后显示) */
+/* ========================================================= */
+.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 16px 5%; background: rgba(13,11,26,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+.nav-brand { font-size: 22px; font-weight: 800; background: linear-gradient(90deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 .nav-links { display: flex; gap: 24px; }
 .nav-links a { font-size: 14px; color: var(--text-muted); }
-.nav-links a:hover { color: var(--primary); }
-
-/* ===== 核心布局 ===== */
 .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
 .section { padding: 60px 0; }
-.section-title {
-  font-size: clamp(22px, 4vw, 28px); font-weight: 700; margin-bottom: 24px;
-  background: linear-gradient(90deg, var(--primary), var(--secondary));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-
-/* ===== Hero 区域 ===== */
-.hero {
-  min-height: 100vh; display: flex; flex-direction: column;
-  justify-content: center; align-items: center; text-align: center;
-  padding: 100px 20px 40px;
-}
-.badge {
-  padding: 6px 16px; border-radius: 99px; font-size: 13px;
-  background: rgba(255, 122, 198, 0.1); border: 1px solid rgba(255, 122, 198, 0.3);
-  color: var(--primary); margin-bottom: 20px;
-}
-.hero h1 {
-  font-size: clamp(32px, 6vw, 56px); font-weight: 800; margin-bottom: 16px;
-  background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
+.section-title { font-size: clamp(22px, 4vw, 28px); font-weight: 700; margin-bottom: 24px; background: linear-gradient(90deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 100px 20px 40px; }
+.badge { padding: 6px 16px; border-radius: 99px; font-size: 13px; background: rgba(255,122,198,0.1); border: 1px solid rgba(255,122,198,0.3); color: var(--primary); margin-bottom: 20px; }
+.hero h1 { font-size: clamp(32px, 6vw, 56px); font-weight: 800; margin-bottom: 16px; background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 .hero p { font-size: clamp(14px, 3vw, 18px); color: var(--text-muted); margin-bottom: 30px; }
 .ip-grid { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
-.ip-card {
-  padding: 12px 20px; border-radius: 12px; background: var(--card-bg);
-  border: 1px solid var(--border); font-size: 14px; 
-}
-.ip-card:hover { border-color: var(--primary); }
+.ip-card { padding: 12px 20px; border-radius: 12px; background: var(--card-bg); border: 1px solid var(--border); font-size: 14px; }
 .ip-card b { color: var(--primary); font-family: monospace; font-size: 15px; }
-
-/* ===== 卡片系统 ===== */
 .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
-.card {
-  background: var(--card-bg); border: 1px solid var(--border);
-  border-radius: 16px; padding: 24px; 
-}
-.card:hover {
-  border-color: rgba(255, 122, 198, 0.4);
-  box-shadow: 0 10px 30px rgba(255, 122, 198, 0.08);
-}
+.card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
 .card h4 { font-size: 17px; color: var(--primary); margin-bottom: 12px; }
 .card p, .card li { font-size: 14px; color: var(--text-muted); }
 .card ul { list-style: none; }
 .card ul li::before { content: "▸ "; color: var(--accent); }
-
-/* ===== 状态卡片 ===== */
-.status-card {
-  background: var(--card-bg); border: 1px solid var(--border);
-  border-radius: 20px; padding: 24px; display: flex; flex-wrap: wrap;
-  justify-content: space-between; align-items: center; gap: 20px;
-}
-.status-num { font-size: 28px; font-weight: 800; color: var(--accent); font-family: monospace; }
+.btn { display: inline-flex; align-items: center; justify-content: center; padding: 12px 28px; border-radius: 99px; font-weight: bold; font-size: 14px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(167,139,250,0.3); }
+.status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.status-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 15px; }
+.status-header { font-weight: bold; font-size: 16px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 5px; }
+.status-row { display: flex; justify-content: space-between; align-items: center; }
+.status-label { font-size: 14px; color: var(--text-muted); }
+.status-num { font-size: 24px; font-weight: 800; color: var(--accent); font-family: monospace; }
 .status-on { color: var(--success); font-weight: bold; }
 .status-off { color: #f59e0b; font-weight: bold; }
-
-/* ===== 按钮 ===== */
-.btn {
-  display: inline-flex; align-items: center; justify-content: center;
-  padding: 12px 28px; border-radius: 99px; font-weight: bold; font-size: 14px;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  color: #fff; border: none; cursor: pointer; 
-  box-shadow: 0 4px 15px rgba(167, 139, 250, 0.3);
-}
-.btn:hover { 
-  box-shadow: 0 6px 20px rgba(167, 139, 250, 0.5); 
-}
-
-/* ===== 响应式 ===== */
-@media (max-width: 768px) {
-  .nav-links { display: none; }
-  .hero h1 { font-size: 32px; }
-  .section { padding: 40px 0; }
-  .cards-grid { grid-template-columns: 1fr; }
-}
+@media (max-width: 768px) { .nav-links { display: none; } .hero h1 { font-size: 32px; } .section { padding: 40px 0; } }
 </style>
 </head>
 <body>
 
-<!-- 导航栏 -->
-<nav class="nav">
-  <div class="nav-brand">幻域 (海外专属)</div>
-  <div class="nav-links">
-    <a href="#status">服务器状态</a>
-    <a href="#connect">连接信息</a>
-    <a href="#rules">规则</a>
-    <a href="#download">下载中心</a>
+<!-- ========================================================= -->
+<!-- 🛑 第一段：拦截面板 (默认隐身，检测失败才出现) -->
+<!-- ========================================================= -->
+<div id="block-panel">
+  <div class="box">
+    <h1>403 FORBIDDEN</h1>
+    <p>当前为海外专线，根据策略<br>中国大陆地区暂不支持直接访问。</p>
+    
+    <div class="btn-group">
+      <a href="https://awa.huanyu.jqu.cc" class="nav-btn btn-main">🚀 前往国内主站</a>
+      <a href="https://huanyu.jqu.cc" class="nav-btn btn-sub">🔗 前往国内副站</a>
+    </div>
+
+    <div class="divider">或通过人机验证</div>
+
+    <div class="verify-btn" id="verifyBtn">
+      <div class="progress-bar" id="progressBar"></div>
+      <span id="verifyText">请长按此处 1.5 秒进行验证</span>
+    </div>
   </div>
-  <button class="btn" onclick="document.getElementById('connect').scrollIntoView({behavior:'smooth'})">开始游戏</button>
-</nav>
+</div>
 
-<!-- 首屏 -->
-<header class="hero">
-  <div class="badge">● 海外专线 · 实时运行中</div>
-  <h1>欢迎来到幻域</h1>
-  <p>Java & 基岩版 互通 · 离线可进 · 畅玩无阻</p>
-  <div class="ip-grid">
-    <div class="ip-card">☕ Java版 IP: <b>huanyu.fucku.top</b></div>
-    <div class="ip-card">🪨 基岩版端口: <b>36784</b></div>
-  </div>
-</header>
-
-<main class="container">
-  <!-- 状态区 -->
-  <section class="section" id="status">
-    <h2 class="section-title">📊 实时状态</h2>
-    <div class="status-card">
-      <div>
-        <p style="color: var(--text-muted); font-size: 14px;">当前在线人数</p>
-        <div class="status-num" id="mc-players">--</div>
-      </div>
-      <div style="text-align: right;">
-        <p style="color: var(--text-muted); font-size: 14px;">服务器状态</p>
-        <div class="status-on" id="mc-status">● 检测中...</div>
-      </div>
+<!-- ========================================================= -->
+<!-- 🌐 第二段：正常网页内容 (默认隐藏，检测通过才出现) -->
+<!-- ========================================================= -->
+<div id="main-content">
+  <nav class="nav">
+    <div class="nav-brand">幻域 (海外专属)</div>
+    <div class="nav-links">
+      <a href="#status">服务器状态</a>
+      <a href="#connect">连接信息</a>
+      <a href="#rules">规则</a>
+      <a href="#download">下载中心</a>
     </div>
-  </section>
+    <button class="btn" onclick="document.getElementById('connect').scrollIntoView({behavior:'smooth'})">开始游戏</button>
+  </nav>
 
-  <!-- 信息区 -->
-  <section class="section" id="connect">
-    <h2 class="section-title">🎮 连接信息</h2>
-    <div class="cards-grid">
-      <div class="card"><h4>Java 版 IP</h4><p style="font-family: monospace; font-size: 18px; color: var(--text);">huanyu.fucku.top</p></div>
-      <div class="card"><h4>基岩版端口</h4><p style="font-family: monospace; font-size: 18px; color: var(--text);">huanyu.fucku.top:36784</p></div>
-      <div class="card"><h4>支持版本</h4><ul><li>Java 1.21</li><li>基岩版 1.26+</li></ul></div>
+  <header class="hero">
+    <div class="badge">● 海外专线 · 实时运行中</div>
+    <h1>欢迎来到幻域</h1>
+    <p>Java & 基岩版 互通 · 离线可进 · 畅玩无阻</p>
+    <div class="ip-grid">
+      <div class="ip-card">☕ 幻域主服 IP: <b>huanyu.fucku.top</b></div>
+      <div class="ip-card">🪨 幻域基岩端口: <b>36784</b></div>
     </div>
-  </section>
+  </header>
 
-  <!-- 规则区 -->
-  <section class="section" id="rules">
-    <h2 class="section-title">📜 服务器规则</h2>
-    <div class="cards-grid">
-      <div class="card"><h4>🚫 禁止开挂</h4><p>严禁使用外挂、矿透、影响平衡的辅助模组或材质包，一经发现直接封禁 IP。</p></div>
-      <div class="card"><h4>🤝 文明游戏</h4><p>禁止辱骂、刷屏、恶意破坏他人建筑。</p></div>
-      <div class="card"><h4>🔐 账号安全</h4><p>请牢记自己的密码，忘记概不负责。</p></div>
-    </div>
-  </section>
-
-  <!-- 下载区 -->
-  <section class="section" id="download">
-    <h2 class="section-title">📥 下载中心</h2>
-    <div class="cards-grid">
-      <div class="card" style="text-align: center;">
-        <h4>💻 PCL2 启动器</h4>
-        <p style="margin-bottom: 16px;">电脑端 Java 版启动器，支持正版/离线登录</p>
-        <a href="https://afdian.com/p/0164034c016c11ebafcb52540025c377" target="_blank" class="btn">前往下载</a>
+  <main class="container">
+    <section class="section" id="status">
+      <h2 class="section-title">📊 实时状态</h2>
+      <div class="status-grid">
+        <div class="status-card">
+          <div class="status-header">🔮 幻域主服</div>
+          <div class="status-row"><span class="status-label">在线人数</span><span class="status-num" id="players-huanyu">--</span></div>
+          <div class="status-row"><span class="status-label">运行状态</span><span class="status-on" id="status-huanyu">● 检测中...</span></div>
+        </div>
+        <div class="status-card">
+          <div class="status-header">⚔️ HM 服务器</div>
+          <div class="status-row"><span class="status-label">在线人数</span><span class="status-num" id="players-hm">--</span></div>
+          <div class="status-row"><span class="status-label">运行状态</span><span class="status-on" id="status-hm">● 检测中...</span></div>
+        </div>
       </div>
-      <div class="card" style="text-align: center;">
-        <h4>📱 安卓客户端</h4>
-        <p style="margin-bottom: 16px;">星茉·幻域 官方安卓客户端</p>
-        <a href="#" target="_blank" class="btn">立即获取</a>
+    </section>
+
+    <section class="section" id="connect">
+      <h2 class="section-title">🎮 连接信息</h2>
+      <div class="cards-grid">
+        <div class="card"><h4>幻域 Java 版 IP</h4><p style="font-family: monospace; font-size: 18px; color: var(--text);">huanyu.fucku.top</p></div>
+        <div class="card"><h4>HM 服务器 IP</h4><p style="font-family: monospace; font-size: 18px; color: var(--text);">hmfree.tooo.top:20063</p></div>
+        <div class="card"><h4>支持版本</h4><ul><li>Java 1.21</li><li>基岩版 1.26+</li></ul></div>
       </div>
-    </div>
-  </section>
-</main>
+    </section>
 
-<footer style="text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 13px; border-top: 1px solid var(--border); margin-top: 40px;">
-  幻域官网 (海外节点) · 幻域团队编写<br>
-  <span style="color: var(--primary);">网页开发者：徐浩宇</span>
-</footer>
+    <section class="section" id="rules">
+      <h2 class="section-title">📜 服务器规则</h2>
+      <div class="cards-grid">
+        <div class="card"><h4>🚫 禁止开挂</h4><p>严禁使用外挂、矿透、影响平衡的辅助模组或材质包。</p></div>
+        <div class="card"><h4>🤝 文明游戏</h4><p>禁止辱骂、刷屏、恶意破坏他人建筑。</p></div>
+        <div class="card"><h4>🔐 账号安全</h4><p>请牢记自己的密码，忘记概不负责。</p></div>
+      </div>
+    </section>
 
-<!-- 获取 Minecraft 服务器状态 -->
+    <section class="section" id="download">
+      <h2 class="section-title">📥 下载中心</h2>
+      <div class="cards-grid">
+        <div class="card" style="text-align: center;">
+          <h4>💻 PCL2 启动器</h4>
+          <p style="margin-bottom: 16px;">电脑端 Java 版启动器</p>
+          <a href="https://afdian.com/p/0164034c016c11ebafcb52540025c377" target="_blank" class="btn">前往下载</a>
+        </div>
+        <div class="card" style="text-align: center;">
+          <h4>📱 安卓客户端</h4>
+          <p style="margin-bottom: 16px;">星茉·幻域 官方客户端</p>
+          <a href="#" target="_blank" class="btn">立即获取</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer style="text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 13px; border-top: 1px solid var(--border); margin-top: 40px;">
+    幻域官网 (海外节点) · 幻域团队编写<br>
+    <span style="color: var(--primary);">网页开发者：徐浩宇</span>
+  </footer>
+</div>
+
+<!-- ========================================================= -->
+<!-- ⚙️ 第三段：核心检测逻辑与数据交互 -->
+<!-- ========================================================= -->
 <script>
-(async function fetchMCStatus() {
-  const statusEl = document.getElementById('mc-status');
-  const playersEl = document.getElementById('mc-players');
-  const API = "https://api.mcsrvstat.us/3/huanyu.fucku.top:36784";
+document.addEventListener('DOMContentLoaded', function() {
+  
+  var isVerified = false; // 标记是否已经通过人机验证
+  var isBlocked = false;  // 标记是否已被拦截
+  
+  var mainContent = document.getElementById('main-content');
+  var blockPanel = document.getElementById('block-panel');
+
+  // 1. 解除拦截，显示内容
+  function showContent() {
+    if (isBlocked && !isVerified) return; // 如果已被拦截且没验证，不准显示
+    mainContent.style.display = 'block';  // 显示正常内容
+    blockPanel.style.display = 'none';    // 隐藏拦截面板
+    fetchAllMCStatus();                   // 开始查询服务器状态
+  }
+
+  // 2. 触发拦截
+  function showBlock() {
+    if (isVerified) return; // 如果已经验证过了，就不再拦截
+    isBlocked = true;
+    mainContent.style.display = 'none';   // 确保正常内容绝对不可见
+    blockPanel.style.display = 'flex';    // 显示拦截面板
+  }
+
+  // 3. 检测网络逻辑（双重并发检测）
+  var hasResponded = false; // 防止多个检测同时触发
+
+  // 线路 A：Google 204 接口 (极速判定)
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://www.google.com/generate_204', true);
+  xhr.timeout = 1500; // 1.5秒超时
+  xhr.onload = function() {
+    if (xhr.status === 204 && !hasResponded) {
+      hasResponded = true;
+      showContent(); // 成功连上，是海外，放行
+    }
+  };
+  xhr.onerror = xhr.ontimeout = function() {
+    if (!hasResponded) {
+      hasResponded = true;
+      showBlock(); // 失败，是国内，拦截
+    }
+  };
+  xhr.send();
+
+  // 线路 B：Cloudflare 接口 (备用兜底)
+  fetch('https://1.1.1.1/cdn-cgi/trace', { cache: "no-store" })
+    .then(res => res.text())
+    .then(text => {
+      if (hasResponded) return;
+      hasResponded = true;
+      if (text.indexOf('loc=CN') !== -1) {
+        showBlock();  // 检测到是中国 IP
+      } else {
+        showContent(); // 是海外 IP
+      }
+    })
+    .catch(err => {
+      if (!hasResponded) {
+        hasResponded = true;
+        showBlock(); // 连 1.1.1.1 都失败，大概率是国内网络
+      }
+    });
+
+  // 兜底超时：如果 2.5 秒后还没结果，强制拦截
+  setTimeout(function() {
+    if (!hasResponded) {
+      hasResponded = true;
+      showBlock();
+    }
+  }, 2500);
+
+
+  // ===== 人机验证长按逻辑 =====
+  var verifyBtn = document.getElementById('verifyBtn');
+  var progressBar = document.getElementById('progressBar');
+  var verifyText = document.getElementById('verifyText');
+  var pressStartTime, animationFrame;
+  var REQUIRED_TIME = 1500;
+
+  function startPress(e) {
+    e.preventDefault();
+    pressStartTime = Date.now();
+    verifyText.textContent = "正在验证...";
+    
+    function updateProgress() {
+      var elapsed = Date.now() - pressStartTime;
+      var progress = Math.min((elapsed / REQUIRED_TIME) * 100, 100);
+      progressBar.style.width = progress + '%';
+
+      if (progress < 100) {
+        animationFrame = requestAnimationFrame(updateProgress);
+      } else {
+        cancelAnimationFrame(animationFrame);
+        verifyBtn.classList.add('success');
+        verifyText.textContent = "✅ 验证通过，正在进入...";
+        verifyBtn.style.borderColor = "#4ade80";
+        
+        setTimeout(function() {
+          isVerified = true; // 标记已通过
+          showContent();     // 强制放行
+        }, 500);
+      }
+    }
+    updateProgress();
+  }
+
+  function cancelPress() {
+    if (verifyBtn.classList.contains('success')) return;
+    cancelAnimationFrame(animationFrame);
+    progressBar.style.width = '0%';
+    verifyText.textContent = "请长按此处 1.5 秒进行验证";
+  }
+
+  verifyBtn.addEventListener('mousedown', startPress);
+  verifyBtn.addEventListener('touchstart', startPress, { passive: false });
+  verifyBtn.addEventListener('mouseup', cancelPress);
+  verifyBtn.addEventListener('mouseleave', cancelPress);
+  verifyBtn.addEventListener('touchend', cancelPress);
+  verifyBtn.addEventListener('touchcancel', cancelPress);
+});
+
+// =========================================================
+// 状态查询逻辑
+// =========================================================
+async function getServerStatus(apiUrl, playersElId, statusElId) {
+  const statusEl = document.getElementById(statusElId);
+  const playersEl = document.getElementById(playersElId);
+  if (!statusEl || !playersEl) return;
 
   try {
-    const res = await fetch(API, { cache: "no-store" });
+    const res = await fetch(apiUrl, { cache: "no-store" });
     const data = await res.json();
-
     if (data && data.online) {
       statusEl.textContent = "● 运行中";
       statusEl.className = "status-on";
@@ -319,7 +349,12 @@ a { text-decoration: none; color: inherit; }
     statusEl.className = "status-off";
     playersEl.textContent = "--";
   }
-})();
+}
+
+function fetchAllMCStatus() {
+  getServerStatus("https://api.mcsrvstat.us/3/huanyu.fucku.top:36784", "players-huanyu", "status-huanyu");
+  getServerStatus("https://api.mcsrvstat.us/3/hmfree.tooo.top:20063", "players-hm", "status-hm");
+}
 </script>
 
 </body>
