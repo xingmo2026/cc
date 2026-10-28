@@ -25,11 +25,10 @@
 body { background-color: var(--bg); color: var(--text); line-height: 1.5; overflow-x: hidden; }
 a { text-decoration: none; color: inherit; }
 
-/* 隐藏主内容 */
 #main-content { display: none; min-height: 100vh; }
 
 /* ========================================================= */
-/* 🛑 拦截面板 (极简深色) */
+/* 🛑 拦截面板 */
 /* ========================================================= */
 #block-panel { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #000; z-index: 99999; flex-direction: column; justify-content: center; align-items: center; }
 #block-panel .box { border: 1px solid var(--border); padding: 40px 30px; border-radius: 16px; max-width: 90%; width: 420px; background: var(--card-bg); text-align: center; }
@@ -43,27 +42,22 @@ a { text-decoration: none; color: inherit; }
 .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border); }
 .divider::before { margin-right: 10px; }
 .divider::after { margin-left: 10px; }
-.start-verify-btn { width: 100%; padding: 14px; border-radius: 8px; font-size: 14px; font-weight: 600; background: var(--text); color: #000; border: none; cursor: pointer; transition: 0.2s; }
+.start-verify-btn { width: 100%; padding: 14px; border-radius: 8px; font-size: 14px; font-weight: 600; background: var(--text); color: #000; border: none; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;}
 .start-verify-btn:hover { background: #d4d4d8; }
 
 /* ========================================================= */
-/* 🧩 15 重现代验证弹窗 (类似极验/腾讯云) */
+/* 🧩 20 重验证弹窗 */
 /* ========================================================= */
-#captcha-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 100000; justify-content: center; align-items: center; backdrop-filter: blur(8px); }
+#captcha-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 100000; justify-content: center; align-items: center; backdrop-filter: blur(8px); }
 .captcha-box { background: #18181b; border: 1px solid #3f3f46; border-radius: 12px; width: 360px; padding: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); text-align: center; position: relative; }
-.captcha-header { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
-.captcha-header span.progress { font-size: 12px; color: var(--primary); background: rgba(255,122,198,0.1); padding: 4px 10px; border-radius: 99px; }
+.captcha-header { font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 12px; display: flex; justify-content: center; align-items: center; gap: 8px; }
 .captcha-subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
-
-/* 验证码通用按钮与输入框 */
 .cap-btn { width: 100%; padding: 14px; background: #27272a; color: #fff; border: 1px solid #3f3f46; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: 0.2s; }
 .cap-btn:hover { background: #3f3f46; }
 .cap-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #3f3f46; background: #09090b; color: #fff; margin-bottom: 12px; text-align: center; font-size: 16px; outline: none; }
-.cap-input:focus { border-color: var(--primary); }
 .cap-words { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px; }
 .cap-word { padding: 12px 18px; background: #27272a; border-radius: 8px; cursor: pointer; font-size: 16px; border: 1px solid transparent; transition: 0.2s; }
 .cap-word:hover { border-color: #52525b; }
-.cap-word img { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; }
 .cap-slider-wrap { width: 100%; height: 44px; background: #27272a; border-radius: 8px; position: relative; overflow: hidden; user-select: none; border: 1px solid #3f3f46; }
 .cap-slider-bg { position: absolute; left: 0; top: 0; height: 100%; width: 44px; background: rgba(74,222,128,0.2); }
 .cap-slider-btn { position: absolute; left: 0; top: 0; width: 44px; height: 100%; background: #52525b; border-radius: 8px; display: flex; justify-content: center; align-items: center; cursor: grab; color: #fff; z-index: 2; }
@@ -82,51 +76,62 @@ a { text-decoration: none; color: inherit; }
 .nav-links a { font-size: 14px; color: var(--text-muted); }
 .nav-links a:hover { color: var(--text); }
 
-.layout-wrapper { display: flex; justify-content: center; max-width: 1400px; margin: 0 auto; padding: 140px 20px 40px; gap: 24px; }
+.layout-wrapper { display: flex; justify-content: center; max-width: 1400px; margin: 0 auto; padding: 140px 10px 40px; gap: 12px; }
 .main-column { flex: 1; max-width: 900px; min-width: 0; }
-.side-column { width: 200px; flex-shrink: 0; display: flex; flex-direction: column; gap: 16px; }
+.side-column { width: 140px; flex-shrink: 0; display: flex; flex-direction: column; gap: 12px; }
 
-/* 侧边广告卡片 */
-.side-ad { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: left; }
+.side-ad { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: left; }
 .side-ad:hover { border-color: #3f3f46; }
 .side-ad .ad-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
 .side-ad p { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4; }
 .side-ad .ad-link { font-size: 12px; color: var(--accent); }
 
-/* 底部大广告 */
 .bottom-ad { margin-top: 40px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 24px; display: flex; align-items: center; justify-content: space-between; }
 .bottom-ad .ad-text h4 { font-size: 16px; color: var(--text); margin-bottom: 4px; }
 .bottom-ad .ad-text p { font-size: 13px; color: var(--text-muted); }
 
-/* 网站通用样式 */
-.section { padding: 50px 0; border-bottom: 1px solid var(--border); }
-.section:last-child { border-bottom: none; }
-.section-title { font-size: 18px; font-weight: 600; margin-bottom: 24px; color: var(--text); }
-.hero { text-align: center; padding: 40px 0 60px; }
-.hero h1 { font-size: clamp(32px, 5vw, 48px); font-weight: 800; margin-bottom: 16px; color: #fff; }
-.hero p { font-size: 16px; color: var(--text-muted); margin-bottom: 32px; }
-.ip-grid { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
-.ip-card { padding: 12px 20px; border-radius: 8px; background: var(--card-bg); border: 1px solid var(--border); font-size: 14px; }
-.ip-card b { color: var(--primary); font-family: monospace; font-size: 15px; }
-.cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
-.card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
-.card h4 { font-size: 15px; color: var(--text); margin-bottom: 8px; font-weight: 600; }
-.card p { font-size: 13px; color: var(--text-muted); }
-.btn { display: inline-flex; align-items: center; justify-content: center; padding: 10px 20px; border-radius: 6px; font-weight: 600; font-size: 13px; background: var(--text); color: #000; border: none; cursor: pointer; }
-.status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
-.status-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
-.status-header { font-weight: 600; font-size: 14px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-.status-row { display: flex; justify-content: space-between; align-items: center; }
-.status-label { font-size: 13px; color: var(--text-muted); }
-.status-num { font-size: 20px; font-weight: 700; color: var(--text); font-family: monospace; }
-.status-on { color: var(--success); font-weight: 500; font-size: 13px; }
+/* 新闻列表样式 */
+.news-list { display: flex; flex-direction: column; gap: 10px; }
+.news-item { background: var(--card-bg); border: 1px solid var(--border); padding: 12px 16px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
+.news-item:hover { border-color: #52525b; }
+.news-item-left { display: flex; align-items: center; gap: 12px; }
+.news-tag { font-size: 10px; background: rgba(255,122,198,0.15); color: var(--primary); padding: 2px 6px; border-radius: 4px; }
+.news-title { font-size: 13px; color: var(--text); }
+.news-time { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
 
-@media (max-width: 1024px) { .side-column { display: none; } }
+/* 网站通用样式 */
+.section { padding: 40px 0; border-bottom: 1px solid var(--border); }
+.section:last-child { border-bottom: none; }
+.section-title { font-size: 18px; font-weight: 600; margin-bottom: 20px; color: var(--text); display: flex; align-items: center; gap: 8px;}
+.hero { text-align: center; padding: 20px 0 40px; }
+.hero h1 { font-size: clamp(28px, 5vw, 42px); font-weight: 800; margin-bottom: 16px; color: #fff; }
+.hero p { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
+.ip-grid { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.ip-card { padding: 10px 16px; border-radius: 8px; background: var(--card-bg); border: 1px solid var(--border); font-size: 13px; }
+.ip-card b { color: var(--primary); font-family: monospace; font-size: 14px; }
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+.card h4 { font-size: 14px; color: var(--text); margin-bottom: 8px; font-weight: 600; }
+.card p { font-size: 12px; color: var(--text-muted); }
+.btn { display: inline-flex; align-items: center; justify-content: center; padding: 10px 16px; border-radius: 6px; font-weight: 600; font-size: 13px; background: var(--text); color: #000; border: none; cursor: pointer; }
+.status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.status-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.status-header { font-weight: 600; font-size: 14px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+.status-row { display: flex; justify-content: space-between; align-items: center; }
+.status-label { font-size: 12px; color: var(--text-muted); }
+.status-num { font-size: 18px; font-weight: 700; color: var(--text); font-family: monospace; }
+.status-on { color: var(--success); font-weight: 500; font-size: 12px; }
+
+/* 📱 手机端保持左右双广告 */
 @media (max-width: 768px) { 
   .nav-links { display: none; } 
+  .nav { top: 0; } 
   .top-ad { display: none; }
-  .nav { top: 0; }
-  .layout-wrapper { padding-top: 80px; }
+  .layout-wrapper { padding: 70px 5px 20px; gap: 8px; flex-direction: row; }
+  .side-column { width: 80px; }
+  .side-ad { padding: 8px; text-align: center; } 
+  .side-ad .ad-title { font-size: 11px; }
+  .side-ad p { display: none; } 
   .bottom-ad { flex-direction: column; gap: 16px; text-align: center; }
 }
 </style>
@@ -149,13 +154,15 @@ a { text-decoration: none; color: inherit; }
       <a href="https://huanyu.jqu.cc" class="nav-btn">🔗 前往国内副站</a>
     </div>
 
-    <div class="divider">或通过 15 重安全验证</div>
-    <button class="start-verify-btn" onclick="startChallenge()">🛡️ 开始 15 重验证</button>
+    <div class="divider">或通过安全验证</div>
+    <button class="start-verify-btn" onclick="startChallenge()">
+      🛡️ 开始人机验证
+    </button>
   </div>
 </div>
 
 <!-- ========================================================= -->
-<!-- 🧩 15 重验证弹窗 -->
+<!-- 🧩 验证弹窗 (不显示进度) -->
 <!-- ========================================================= -->
 <div id="captcha-overlay">
   <div class="captcha-box" id="captchaBox"></div>
@@ -169,18 +176,18 @@ a { text-decoration: none; color: inherit; }
     <div class="nav-brand">幻域</div>
     <div class="nav-links">
       <a href="#status">状态</a>
+      <a href="#news">资讯</a>
       <a href="#connect">连接</a>
       <a href="#rules">规则</a>
-      <a href="#download">下载</a>
     </div>
   </nav>
 
   <div class="layout-wrapper">
     <!-- 左侧广告 -->
     <div class="side-column">
-      <div class="side-ad"><div class="ad-title">🔥 热门推荐</div><p>Hypixel 全球最大服务器，体验极致小游戏。</p><a href="https://hypixel.net" target="_blank" class="ad-link">立即前往 →</a></div>
-      <div class="side-ad"><div class="ad-title">⚔️ 经典无政府</div><p>2B2T 原版生存，感受最纯粹的无规则。</p><a href="https://2b2t.org" target="_blank" class="ad-link">立即前往 →</a></div>
-      <div class="side-ad"><div class="ad-title">🛒 幻域周边</div><p>定制鼠标垫、专属鼠标等外设特惠。</p><a href="#" class="ad-link">查看详情 →</a></div>
+      <div class="side-ad"><div class="ad-title">🔥 热门</div><p>Hypixel 全球最大服务器。</p><a href="https://hypixel.net" target="_blank" class="ad-link">前往 →</a></div>
+      <div class="side-ad"><div class="ad-title">⚔️ 经典</div><p>2B2T 原版生存。</p><a href="https://2b2t.org" target="_blank" class="ad-link">前往 →</a></div>
+      <div class="side-ad"><div class="ad-title">🛒 周边</div><p>幻域定制外设。</p><a href="#" class="ad-link">查看 →</a></div>
     </div>
 
     <!-- 中间内容 -->
@@ -210,11 +217,19 @@ a { text-decoration: none; color: inherit; }
         </div>
       </section>
 
+      <!-- 🌟 15条最新新闻/广告 -->
+      <section class="section" id="news">
+        <h2 class="section-title">📰 最新资讯与推荐</h2>
+        <div class="news-list" id="newsList">
+          <!-- 通过 JS 动态生成 15 条 -->
+        </div>
+      </section>
+
       <section class="section" id="connect">
         <h2 class="section-title">🎮 连接信息</h2>
         <div class="cards-grid">
-          <div class="card"><h4>幻域 Java 版</h4><p style="font-family: monospace; font-size: 15px; color:#fff;">huanyu.fucku.top</p></div>
-          <div class="card"><h4>HM 服务器</h4><p style="font-family: monospace; font-size: 15px; color:#fff;">hmfree.tooo.top:20063</p></div>
+          <div class="card"><h4>幻域 Java 版</h4><p style="font-family: monospace; font-size: 13px; color:#fff;">huanyu.fucku.top</p></div>
+          <div class="card"><h4>HM 服务器</h4><p style="font-family: monospace; font-size: 13px; color:#fff;">hmfree.tooo.top:20063</p></div>
           <div class="card"><h4>支持版本</h4><p>Java 1.21 / 基岩 1.26+</p></div>
         </div>
       </section>
@@ -228,27 +243,11 @@ a { text-decoration: none; color: inherit; }
         </div>
       </section>
 
-      <section class="section" id="download">
-        <h2 class="section-title">📥 下载中心</h2>
-        <div class="cards-grid">
-          <div class="card" style="text-align: center;">
-            <h4>💻 PCL2 启动器</h4>
-            <p style="margin-bottom: 16px;">电脑端首选</p>
-            <a href="https://afdian.com/p/0164034c016c11ebafcb52540025c377" target="_blank" class="btn">前往下载</a>
-          </div>
-          <div class="card" style="text-align: center;">
-            <h4>📱 安卓客户端</h4>
-            <p style="margin-bottom: 16px;">星茉·幻域 客户端</p>
-            <a href="#" target="_blank" class="btn">立即获取</a>
-          </div>
-        </div>
-      </section>
-
       <!-- 底部横幅广告 -->
       <div class="bottom-ad">
         <div class="ad-text">
           <h4>🎮 幻域周边商城特惠</h4>
-          <p>定制外设、精美手办限时折扣，点击领取优惠券。</p>
+          <p>定制外设、精美手办限时折扣。</p>
         </div>
         <a href="#" class="btn" style="background: #fff;">去看看</a>
       </div>
@@ -256,9 +255,9 @@ a { text-decoration: none; color: inherit; }
 
     <!-- 右侧广告 -->
     <div class="side-column">
-      <div class="side-ad"><div class="ad-title">🌸 花雨庭</div><p>国内知名的小游戏服务器，丰富玩法。</p><a href="#" class="ad-link">查看详情 →</a></div>
-      <div class="side-ad"><div class="ad-title">🌍 服务器推荐</div><p>寻找更多好玩的原版/模组服务器。</p><a href="#" class="ad-link">点击发现 →</a></div>
-      <div class="side-ad"><div class="ad-title">🚀 加速器推荐</div><p>告别卡顿，畅享丝滑联机体验。</p><a href="#" class="ad-link">免费试用 →</a></div>
+      <div class="side-ad"><div class="ad-title">🌸 花雨庭</div><p>国内知名小游戏服。</p><a href="#" class="ad-link">查看 →</a></div>
+      <div class="side-ad"><div class="ad-title">🌍 推荐</div><p>寻找好玩服务器。</p><a href="#" class="ad-link">发现 →</a></div>
+      <div class="side-ad"><div class="ad-title">🚀 加速器</div><p>告别卡顿。</p><a href="#" class="ad-link">试用 →</a></div>
     </div>
   </div>
 
@@ -281,6 +280,7 @@ function showContent() {
   mainContent.style.display = 'block';  
   blockPanel.style.display = 'none';    
   fetchAllMCStatus();      
+  renderNews(); // 渲染新闻
 }
 
 function showBlock() {
@@ -308,14 +308,12 @@ setTimeout(function() { if (!hasResponded) { hasResponded = true; showBlock(); }
 
 
 // =========================================================
-// 🧩 15 重随机现代验证逻辑
+// 🧩 20 重随机现代验证逻辑 (无进度条)
 // =========================================================
 let currentLevel = 1;
-const TOTAL_LEVELS = 15;
+const TOTAL_LEVELS = 20;
 const captchaOverlay = document.getElementById('captcha-overlay');
 const captchaBox = document.getElementById('captchaBox');
-
-// 记录已经出现过的关卡类型，确保不重复
 let usedTypes = [];
 
 function startChallenge() {
@@ -340,38 +338,31 @@ function passLevel() {
   nextLevel();
 }
 
-// 渲染 15 种不同玩法
 function renderCaptchaLevel(level) {
+  // 头部只有图标，不显示任何进度
   let html = `
     <div class="captcha-header">
       <span>🛡️ 安全验证</span>
-      <span class="progress">第 ${level} / ${TOTAL_LEVELS} 关</span>
     </div>
   `;
 
-  // 随机分配 1-15 的类型，确保不重复
   let type;
-  do {
-    type = Math.floor(Math.random() * 15) + 1;
-  } while (usedTypes.includes(type));
+  do { type = Math.floor(Math.random() * 20) + 1; } while (usedTypes.includes(type));
   usedTypes.push(type);
 
   if (type === 1) {
-    // 1. 滑块
     html += `<p class="captcha-subtitle">拖动滑块拼合缺口</p>
       <div class="cap-slider-wrap" id="sl-wrap"><div class="cap-slider-bg" id="sl-bg"></div><div class="cap-slider-text" id="sl-text">向右拖动</div><div class="cap-slider-btn" id="sl-btn">→</div></div>`;
     captchaBox.innerHTML = html;
     initSlider();
   } 
   else if (type === 2) {
-    // 2. 长按
     html += `<p class="captcha-subtitle">请长按下方按钮 2 秒</p>
       <div class="cap-hold-btn" id="hold-btn"><div class="cap-hold-progress" id="hold-prog"></div><span style="position:relative;z-index:1;">长按我</span></div>`;
     captchaBox.innerHTML = html;
     initHold();
   }
   else if (type === 3) {
-    // 3. 算数
     let n1 = Math.floor(Math.random() * 20) + 10;
     let n2 = Math.floor(Math.random() * 20) + 10;
     let sum = n1 + n2;
@@ -381,7 +372,6 @@ function renderCaptchaLevel(level) {
     captchaBox.innerHTML = html;
   }
   else if (type === 4) {
-    // 4. 找颜色
     html += `<p class="captcha-subtitle">请点击绿颜色的方块</p>
       <div style="display:flex; gap:15px; justify-content:center;">
         <div class="cap-btn" style="width:60px; height:60px; background:#ef4444; padding:0;" onclick="alert('点错了！')"></div>
@@ -392,8 +382,7 @@ function renderCaptchaLevel(level) {
     captchaBox.innerHTML = html;
   }
   else if (type === 5) {
-    // 5. 输入文字
-    let words = ["HUANYU", "MC", "FANTASY", "SERVER"];
+    let words = ["HUANYU", "MC", "FANTASY", "SERVER", "GAME", "PLAY"];
     let target = words[Math.floor(Math.random() * words.length)];
     html += `<p class="captcha-subtitle">请在下方输入 <b>${target}</b></p>
       <input type="text" class="cap-input" id="txt-input" placeholder="不区分大小写">
@@ -401,7 +390,6 @@ function renderCaptchaLevel(level) {
     captchaBox.innerHTML = html;
   }
   else if (type === 6) {
-    // 6. 选方向
     html += `<p class="captcha-subtitle">请点击指向左边的箭头</p>
       <div style="display:flex; gap:20px; justify-content:center; font-size:28px;">
         <div style="cursor:pointer; padding:10px;" onclick="passLevel()">←</div>
@@ -412,7 +400,6 @@ function renderCaptchaLevel(level) {
     captchaBox.innerHTML = html;
   }
   else if (type === 7) {
-    // 7. 找最大数
     html += `<p class="captcha-subtitle">请点击数字最大的方块</p>
       <div class="cap-words">
         <div class="cap-word" onclick="alert('选错了！')">56</div>
@@ -423,7 +410,6 @@ function renderCaptchaLevel(level) {
     captchaBox.innerHTML = html;
   }
   else if (type === 8) {
-    // 8. 选元音
     html += `<p class="captcha-subtitle">请点击属于元音字母的方块 (a,e,i,o,u)</p>
       <div class="cap-words">
         <div class="cap-word" onclick="alert('选错了！')">B</div>
@@ -434,7 +420,6 @@ function renderCaptchaLevel(level) {
     captchaBox.innerHTML = html;
   }
   else if (type === 9) {
-    // 9. 选动物
     html += `<p class="captcha-subtitle">请点击下方的动物图标</p>
       <div class="cap-words">
         <div class="cap-word" onclick="alert('选错了！')">🍎</div>
@@ -445,14 +430,12 @@ function renderCaptchaLevel(level) {
     captchaBox.innerHTML = html;
   }
   else if (type === 10) {
-    // 10. 拼写题
     html += `<p class="captcha-subtitle">“苹果”的英文单词是？</p>
       <input type="text" class="cap-input" id="word-input" placeholder="输入英文">
       <button class="cap-btn" onclick="if(document.getElementById('word-input').value.toLowerCase() === 'apple') passLevel(); else alert('拼写错误！')">提交</button>`;
     captchaBox.innerHTML = html;
   }
   else if (type === 11) {
-    // 11. 选双数
     html += `<p class="captcha-subtitle">请点击一个双数 (偶数)</p>
       <div class="cap-words">
         <div class="cap-word" onclick="alert('选错了！')">7</div>
@@ -463,7 +446,6 @@ function renderCaptchaLevel(level) {
     captchaBox.innerHTML = html;
   }
   else if (type === 12) {
-    // 12. 选天气
     html += `<p class="captcha-subtitle">请点击代表“晴天”的图标</p>
       <div class="cap-words">
         <div class="cap-word" onclick="alert('选错了！')">🌧️</div>
@@ -473,7 +455,6 @@ function renderCaptchaLevel(level) {
     captchaBox.innerHTML = html;
   }
   else if (type === 13) {
-    // 13. 选编程语言
     html += `<p class="captcha-subtitle">以下哪个是编程语言？</p>
       <div class="cap-words">
         <div class="cap-word" onclick="alert('选错了！')">HTML</div>
@@ -483,7 +464,6 @@ function renderCaptchaLevel(level) {
     captchaBox.innerHTML = html;
   }
   else if (type === 14) {
-    // 14. 选行星
     html += `<p class="captcha-subtitle">以下哪个是八大行星之一？</p>
       <div class="cap-words">
         <div class="cap-word" onclick="alert('选错了！')">月球</div>
@@ -493,14 +473,51 @@ function renderCaptchaLevel(level) {
     captchaBox.innerHTML = html;
   }
   else if (type === 15) {
-    // 15. 终极确认
+    html += `<p class="captcha-subtitle">请点击数字最小的方块</p>
+      <div class="cap-words">
+        <div class="cap-word" onclick="passLevel()">3</div>
+        <div class="cap-word" onclick="alert('选错了！')">12</div>
+        <div class="cap-word" onclick="alert('选错了！')">56</div>
+      </div>`;
+    captchaBox.innerHTML = html;
+  }
+  else if (type === 16) {
+    html += `<p class="captcha-subtitle">“1 + 1” 等于几？</p>
+      <input type="number" class="cap-input" id="easy-math" placeholder="输入数字">
+      <button class="cap-btn" onclick="if(document.getElementById('easy-math').value == 2) passLevel(); else alert('算错了！')">提交</button>`;
+    captchaBox.innerHTML = html;
+  }
+  else if (type === 17) {
+    html += `<p class="captcha-subtitle">请点击红颜色的方块</p>
+      <div style="display:flex; gap:15px; justify-content:center;">
+        <div class="cap-btn" style="width:60px; height:60px; background:#3b82f6; padding:0;" onclick="alert('点错了！')"></div>
+        <div class="cap-btn" style="width:60px; height:60px; background:#ef4444; padding:0;" onclick="passLevel()"></div>
+        <div class="cap-btn" style="width:60px; height:60px; background:#4ade80; padding:0;" onclick="alert('点错了！')"></div>
+      </div>`;
+    captchaBox.innerHTML = html;
+  }
+  else if (type === 18) {
+    html += `<p class="captcha-subtitle">以下哪个是水果？</p>
+      <div class="cap-words">
+        <div class="cap-word" onclick="alert('选错了！')">白菜</div>
+        <div class="cap-word" onclick="passLevel()">香蕉</div>
+        <div class="cap-word" onclick="alert('选错了！')">牛肉</div>
+      </div>`;
+    captchaBox.innerHTML = html;
+  }
+  else if (type === 19) {
+    html += `<p class="captcha-subtitle">请在下方输入“123”</p>
+      <input type="text" class="cap-input" id="num-input" placeholder="输入数字">
+      <button class="cap-btn" onclick="if(document.getElementById('num-input').value === '123') passLevel(); else alert('输入错误！')">验证</button>`;
+    captchaBox.innerHTML = html;
+  }
+  else if (type === 20) {
     html += `<p class="captcha-subtitle" style="color:#4ade80;">🎉 恭喜您通过所有验证！</p>
       <button class="cap-btn" style="background:var(--text); color:#000; font-weight:bold;" onclick="passLevel()">进入网站</button>`;
     captchaBox.innerHTML = html;
   }
 }
 
-// 滑块初始化
 function initSlider() {
   const wrap = document.getElementById('sl-wrap');
   const btn = document.getElementById('sl-btn');
@@ -544,7 +561,6 @@ function initSlider() {
   }
 }
 
-// 长按初始化
 function initHold() {
   const btn = document.getElementById('hold-btn');
   const prog = document.getElementById('hold-prog');
@@ -606,6 +622,51 @@ async function getServerStatus(apiUrl, playersElId, statusElId) {
 function fetchAllMCStatus() {
   getServerStatus("https://api.mcsrvstat.us/3/huanyu.fucku.top:36784", "players-huanyu", "status-huanyu");
   getServerStatus("https://api.mcsrvstat.us/3/hmfree.tooo.top:20063", "players-hm", "status-hm");
+}
+
+// =========================================================
+// 📰 渲染 15 条最新新闻/广告
+// =========================================================
+const newsData = [
+  "Minecraft 1.21 全新版本特性爆料，自动合成台登场",
+  "Hypixel 服务器在线人数突破 20 万，创历史新高",
+  "幻域官方周边商城今日上线，首单立减 20 元",
+  "2B2T 无政府服务器出现神秘巨型建筑",
+  "如何快速在基岩版与 Java 版之间跨平台联机",
+  "幻域服务器国庆活动预告，海量钻石等你拿",
+  "玩家在 Minecraft 中耗时 3 年还原真实城市",
+  "推荐 5 款提升生存体验的轻量级辅助模组",
+  "Mojang 官方宣布下个版本将优化区块加载速度",
+  "你绝对不知道的 10 个 Minecraft 隐藏彩蛋",
+  "全新光影包发布，让你的世界美如画",
+  "幻域主服即将迎来一周年庆典，欢迎回归",
+  "盘点那些年我们在 MC 里造过的奇葩建筑",
+  "如何有效防止苦力怕炸家？老玩家教你几招",
+  "寻找最适合开黑的 Minecraft 小游戏服务器"
+];
+
+function renderNews() {
+  const newsList = document.getElementById('newsList');
+  if(!newsList) return;
+  
+  // 随机打乱
+  let shuffledNews = [...newsData].sort(() => 0.5 - Math.random());
+  
+  let html = "";
+  shuffledNews.slice(0, 10).forEach((news, index) => {
+    // 随机生成一个时间（比如 1-12 小时前）
+    let hoursAgo = Math.floor(Math.random() * 12) + 1;
+    html += `
+      <div class="news-item">
+        <div class="news-item-left">
+          <span class="news-tag">${index < 3 ? '最新' : '推荐'}</span>
+          <span class="news-title">${news}</span>
+        </div>
+        <span class="news-time">${hoursAgo}小时前</span>
+      </div>
+    `;
+  });
+  newsList.innerHTML = html;
 }
 </script>
 
