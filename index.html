@@ -31,7 +31,7 @@ a { text-decoration: none; color: inherit; }
 .spinner { width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 12px; }
 
 /* ========================================================= */
-/* 🛑 拦截面板 */
+/* 🛑 拦截面板 & 人脸识别面板 */
 /* ========================================================= */
 #block-panel { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0,0,0,0.95); z-index: 99999; flex-direction: column; justify-content: center; align-items: center; animation: fadeIn 0.3s ease; }
 #block-panel .box { border: 1px solid var(--border); padding: 40px 30px; border-radius: 16px; max-width: 90%; width: 420px; background: var(--card-bg); text-align: center; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
@@ -44,8 +44,9 @@ a { text-decoration: none; color: inherit; }
 .divider { display: flex; align-items: center; text-align: center; color: #52525b; font-size: 12px; margin: 20px 0; }
 .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border); }
 .divider::before { margin-right: 10px; } .divider::after { margin-left: 10px; }
-.start-verify-btn { width: 100%; padding: 14px; border-radius: 8px; font-size: 14px; font-weight: 600; background: var(--text); color: #000; border: none; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.start-verify-btn { width: 100%; padding: 14px; border-radius: 8px; font-size: 14px; font-weight: 600; background: var(--text); color: #000; border: none; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; }
 .start-verify-btn:hover { background: #d4d4d8; transform: scale(0.98); }
+.btn-face { background: var(--accent); color: #000; }
 
 /* ========================================================= */
 /* 🧩 验证弹窗 (极验风格) */
@@ -53,27 +54,32 @@ a { text-decoration: none; color: inherit; }
 #captcha-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 100000; justify-content: center; align-items: center; backdrop-filter: blur(10px); animation: fadeIn 0.2s ease; }
 .captcha-box { background: #1e1e1e; border: 1px solid #333; border-radius: 12px; width: 340px; padding: 0; box-shadow: 0 20px 40px rgba(0,0,0,0.6); text-align: center; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden; color: #fff; }
 .captcha-header { padding: 16px 20px; font-size: 16px; font-weight: 600; text-align: left; border-bottom: 1px solid #333; display: flex; align-items: center; gap: 8px; background: #252525; }
-
-/* 拼图验证区域 */
-.puzzle-container { position: relative; width: 100%; height: 180px; background-size: cover; background-position: center; overflow: hidden; }
+.puzzle-container { position: relative; width: 100%; height: 180px; background-size: cover; background-position: center; overflow: hidden; background-color: #222; }
 .puzzle-slice { position: absolute; width: 50px; height: 50px; top: 50px; background: rgba(255,255,255,0.1); border: 2px solid #fff; box-shadow: 0 0 10px rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; color: #fff; font-weight: bold; z-index: 2; transition: left 0.1s; }
 .puzzle-hole { position: absolute; width: 50px; height: 50px; top: 50px; background: rgba(0,0,0,0.7); border: 1px dashed #999; border-radius: 4px; z-index: 1; }
-
-/* 滑动条 */
 .slider-wrap { padding: 20px; background: #252525; position: relative; }
 .slider-bar { width: 100%; height: 40px; background: #333; border-radius: 20px; position: relative; overflow: hidden; border: 1px solid #444; }
 .slider-fill { position: absolute; left: 0; top: 0; height: 100%; width: 40px; background: rgba(74,222,128,0.3); }
 .slider-btn { position: absolute; left: 0; top: 0; width: 40px; height: 100%; background: #fff; border-radius: 20px; display: flex; justify-content: center; align-items: center; cursor: grab; color: #000; font-size: 18px; font-weight: bold; z-index: 2; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
 .slider-text { position: absolute; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; color: #888; font-size: 13px; pointer-events: none; }
-
-/* 九宫格点选 */
 .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 20px; background: #252525; }
-.grid-item { position: relative; padding-top: 100%; border-radius: 8px; overflow: hidden; cursor: pointer; border: 2px solid transparent; transition: 0.2s; }
+.grid-item { position: relative; padding-top: 100%; border-radius: 8px; overflow: hidden; cursor: pointer; border: 2px solid transparent; transition: 0.2s; background: #111; }
 .grid-item img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
 .grid-item.selected { border-color: var(--success); transform: scale(0.95); }
 .grid-item.selected::after { content: '✓'; position: absolute; top: 5px; right: 5px; background: var(--success); color: #000; width: 20px; height: 20px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 12px; }
 .grid-submit { width: calc(100% - 40px); margin: 0 20px 20px; padding: 12px; background: var(--primary); color: #000; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; opacity: 0.5; transition: 0.2s; }
 .grid-submit.active { opacity: 1; }
+
+/* ========================================================= */
+/* 🎥 人脸识别弹窗 (本地模拟) */
+/* ========================================================= */
+#face-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.9); z-index: 100001; justify-content: center; align-items: center; flex-direction: column; animation: fadeIn 0.3s ease; }
+.face-box { position: relative; width: 320px; height: 320px; border-radius: 50%; overflow: hidden; border: 4px solid var(--accent); box-shadow: 0 0 30px rgba(125,211,252,0.4); background: #000; }
+#video-feed { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); /* 镜像 */ }
+.scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: rgba(125,211,252,0.8); box-shadow: 0 0 10px #7dd3fc; animation: scanAnim 2s linear infinite; }
+@keyframes scanAnim { 0% { top: 0; } 50% { top: 100%; } 100% { top: 0; } }
+.face-action-text { color: #fff; font-size: 20px; font-weight: bold; margin-top: 30px; margin-bottom: 20px; text-align: center; min-height: 30px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+.face-tip { color: var(--text-muted); font-size: 13px; text-align: center; max-width: 300px; }
 
 /* ========================================================= */
 /* 🌐 多语言切换悬浮球 */
@@ -182,8 +188,13 @@ a { text-decoration: none; color: inherit; }
     </div>
 
     <div class="divider" data-i18n="divider">或通过安全验证</div>
+    
+    <!-- 两个按钮：人机验证 & 人脸模拟 -->
     <button class="start-verify-btn" onclick="startChallenge()">
       <span data-i18n="btnVerify">🛡️ 开始人机验证</span>
+    </button>
+    <button class="start-verify-btn btn-face" onclick="startFaceScan()">
+      <span>📷 开始人脸识别</span>
     </button>
   </div>
 </div>
@@ -191,6 +202,16 @@ a { text-decoration: none; color: inherit; }
 <!-- 🧩 验证弹窗 -->
 <div id="captcha-overlay">
   <div class="captcha-box" id="captchaBox"></div>
+</div>
+
+<!-- 🎥 人脸识别弹窗 (纯前端不传数据) -->
+<div id="face-modal">
+  <div class="face-box">
+    <video id="video-feed" autoplay playsinline></video>
+    <div class="scan-line"></div>
+  </div>
+  <div class="face-action-text" id="face-action">正在打开摄像头...</div>
+  <div class="face-tip">当前为纯本地模拟验证，不会记录或上传任何面部数据。</div>
 </div>
 
 <!-- 🌐 正常网页内容 -->
@@ -206,11 +227,7 @@ a { text-decoration: none; color: inherit; }
   </nav>
 
   <div class="layout-wrapper">
-    <div class="side-column" id="adLeftCol">
-      <a href="#" class="side-ad" id="adLeft1"><img src="" alt="Ad"><div class="ad-content"><div class="ad-title">Loading...</div><div class="ad-link">Go →</div></div></a>
-      <a href="#" class="side-ad" id="adLeft2"><img src="" alt="Ad"><div class="ad-content"><div class="ad-title">Loading...</div><div class="ad-link">Go →</div></div></a>
-    </div>
-
+    <div class="side-column" id="adLeftCol"></div>
     <div class="main-column">
       <header class="hero">
         <h1 data-i18n="heroTitle">欢迎来到幻域</h1>
@@ -250,11 +267,7 @@ a { text-decoration: none; color: inherit; }
         </div>
       </a>
     </div>
-
-    <div class="side-column" id="adRightCol">
-      <a href="#" class="side-ad" id="adRight1"><img src="" alt="Ad"><div class="ad-content"><div class="ad-title">Loading...</div><div class="ad-link">Go →</div></div></a>
-      <a href="#" class="side-ad" id="adRight2"><img src="" alt="Ad"><div class="ad-content"><div class="ad-title">Loading...</div><div class="ad-link">Go →</div></div></a>
-    </div>
+    <div class="side-column" id="adRightCol"></div>
   </div>
 
   <footer style="text-align: center; padding: 30px; color: #52525b; font-size: 12px; border-top: 1px solid var(--border);">
@@ -265,7 +278,7 @@ a { text-decoration: none; color: inherit; }
 <!-- ⚙️ 核心脚本 -->
 <script>
 // =========================================================
-// 🌐 5 种常用语言字典 (自动识别系统语言)
+// 🌐 5 种常用语言字典
 // =========================================================
 const i18n = {
   zh: { loading: "正在检查网络环境...", topAd: "📢 广告：服务器长期招新，点击加入 QQ 群获取福利", blockDesc: "因为这是海外专线<br>中国大陆用户无法直接访问", btnMain: "🚀 前往国内主站", btnSub: "🔗 前往国内副站", divider: "或通过安全验证", btnVerify: "🛡️ 开始人机验证", brand: "幻域", navStatus: "状态", navNews: "资讯", navConnect: "连接", navRules: "规则", heroTitle: "欢迎来到幻域", heroDesc: "Java & 基岩版互通 · 离线可进 · 纯净体验", mainServer: "主服", port: "端口", statusTitle: "📊 实时状态", server1: "🔮 幻域主服", server2: "⚔️ HM 服务器", players: "在线人数", statusLabel: "运行状态", checking: "● 检测中...", newsTitle: "📰 最新资讯与推荐" },
@@ -302,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // =========================================================
-// 🌍 网络检测防误杀
+// 🌍 网络检测与放行
 // =========================================================
 var isVerified = false, isBlocked = false;
 var mainContent = document.getElementById('main-content');
@@ -351,33 +364,101 @@ setTimeout(function() { if (!hasPassed && !isBlocked) showBlock(); }, 4500);
 
 
 // =========================================================
-// 📢 随机广告库 (填充左右和底部)
+// 🎥 模拟人脸识别逻辑 (纯本地不传数据)
 // =========================================================
-const adDatabase = [
-  { img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=400&q=80", title: "Hypixel", desc: "Global Mini-Game Server", link: "https://hypixel.net" },
-  { img: "https://images.unsplash.com/photo-1607513746994-51f730a44832?auto=format&fit=crop&w=400&q=80", title: "2B2T", desc: "Oldest Anarchy Server", link: "https://2b2t.org" },
-  { img: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=400&q=80", title: "Steam", desc: "PC Game Platform", link: "https://store.steampowered.com" },
-  { img: "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?auto=format&fit=crop&w=400&q=80", title: "UU Booster", desc: "Game Accelerator", link: "https://uu.163.com" },
-  { img: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=400&q=80", title: "Mojang", desc: "MC Official Studio", link: "https://www.minecraft.net" }
-];
+let videoStream = null;
 
-function initAds() {
-  let shuffledAds = [...adDatabase, ...adDatabase].sort(() => 0.5 - Math.random());
-  document.getElementById('adLeft1').href = shuffledAds[0].link; document.getElementById('adLeft1').querySelector('img').src = shuffledAds[0].img; document.getElementById('adLeft1').querySelector('.ad-title').textContent = shuffledAds[0].title;
-  document.getElementById('adLeft2').href = shuffledAds[1].link; document.getElementById('adLeft2').querySelector('img').src = shuffledAds[1].img; document.getElementById('adLeft2').querySelector('.ad-title').textContent = shuffledAds[1].title;
-  document.getElementById('adRight1').href = shuffledAds[2].link; document.getElementById('adRight1').querySelector('img').src = shuffledAds[2].img; document.getElementById('adRight1').querySelector('.ad-title').textContent = shuffledAds[2].title;
-  document.getElementById('adRight2').href = shuffledAds[3].link; document.getElementById('adRight2').querySelector('img').src = shuffledAds[3].img; document.getElementById('adRight2').querySelector('.ad-title').textContent = shuffledAds[3].title;
-  document.getElementById('adBottom').href = shuffledAds[4].link; document.getElementById('adBottom').querySelector('img').src = shuffledAds[4].img; document.getElementById('adBottom').querySelector('h4').textContent = shuffledAds[4].title; document.getElementById('adBottom').querySelector('p').textContent = shuffledAds[4].desc;
+async function startFaceScan() {
+  blockPanel.style.display = 'none';
+  const faceModal = document.getElementById('face-modal');
+  const video = document.getElementById('video-feed');
+  const actionText = document.getElementById('face-action');
+  
+  faceModal.style.display = 'flex';
+  actionText.textContent = "正在打开摄像头...";
+  
+  try {
+    // 请求前置摄像头
+    videoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+    video.srcObject = videoStream;
+    
+    // 动作序列库
+    const actions = [
+      "请向左转头",
+      "请向右转头",
+      "请张张嘴",
+      "请点点头",
+      "请眨眨眼",
+      "请摇头"
+    ];
+
+    let step = 0;
+    const totalSteps = 3; // 随机做 3 个动作
+
+    function nextAction() {
+      if (step >= totalSteps) {
+        // 动作做完了（不管对错），直接通过
+        actionText.textContent = "✅ 验证通过";
+        actionText.style.color = "var(--success)";
+        
+        setTimeout(() => {
+          closeFaceScan();
+          isVerified = true;
+          showContent();
+        }, 1000);
+        return;
+      }
+
+      // 随机取一个动作
+      const randomAction = actions[Math.floor(Math.random() * actions.length)];
+      actionText.textContent = `(${step + 1}/3) ${randomAction}`;
+      actionText.style.color = "#fff";
+      step++;
+
+      // 给用户 2 秒钟去尝试做动作，做没做对不管，2秒后自动下一个
+      setTimeout(nextAction, 2000); 
+    }
+
+    // 摄像头打开后等 1 秒开始动作提示
+    setTimeout(nextAction, 1000);
+
+  } catch (err) {
+    // 如果用户拒绝摄像头权限，或者没摄像头，也直接放行(因为这是模拟)
+    actionText.textContent = "未检测到摄像头或已被拒绝，直接放行...";
+    actionText.style.color = "var(--warning)";
+    setTimeout(() => {
+      closeFaceScan();
+      isVerified = true;
+      showContent();
+    }, 1500);
+  }
+}
+
+function closeFaceScan() {
+  const faceModal = document.getElementById('face-modal');
+  faceModal.style.display = 'none';
+  // 彻底关闭摄像头硬件
+  if (videoStream) {
+    videoStream.getTracks().forEach(track => track.stop());
+    videoStream = null;
+  }
 }
 
 
 // =========================================================
-// 🧩 极验验证逻辑 (仅限拼图滑动 & 九宫格)
+// 🧩 极验验证逻辑 (稳定图片源 + 真正随机题库)
 // =========================================================
 let currentLevel = 1;
 const TOTAL_LEVELS = 20;
 const captchaOverlay = document.getElementById('captcha-overlay');
 const captchaBox = document.getElementById('captchaBox');
+
+const stableImages = [
+  "https://picsum.photos/id/10/400/200", "https://picsum.photos/id/11/400/200", 
+  "https://picsum.photos/id/12/400/200", "https://picsum.photos/id/13/400/200",
+  "https://picsum.photos/id/14/400/200", "https://picsum.photos/id/15/400/200",
+  "https://picsum.photos/id/16/400/200", "https://picsum.photos/id/17/400/200"
+];
 
 function startChallenge() { currentLevel = 1; nextLevel(); }
 
@@ -396,12 +477,10 @@ function passLevel() { currentLevel++; nextLevel(); }
 
 function renderCaptchaLevel() {
   let html = `<div class="captcha-header"><span>🛡️ 安全验证</span></div>`;
-  // 随机在 1 和 2 之间选择
   let type = Math.random() > 0.5 ? 1 : 2;
 
   if (type === 1) {
-    // 1. 真实拼图滑动
-    const bgImg = "https://images.unsplash.com/photo-1506744626753-1fa44cf2035b?auto=format&fit=crop&w=400&q=80";
+    const bgImg = stableImages[Math.floor(Math.random() * stableImages.length)];
     const targetX = Math.floor(Math.random() * 150) + 100; 
     html += `
       <div class="puzzle-container" id="puzzle-bg" style="background-image: url('${bgImg}');">
@@ -413,17 +492,23 @@ function renderCaptchaLevel() {
     initRealSlider(targetX);
   }
   else {
-    // 2. 九宫格点选
-    const imgs = ["https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=200&q=60","https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=200&q=60","https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=200&q=60","https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?w=200&q=60","https://images.unsplash.com/photo-1471479917193-f00955256257?w=200&q=60","https://images.unsplash.com/photo-1449034446853-66c86144b0ad?w=200&q=60","https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200&q=60","https://images.unsplash.com/photo-1506744626753-1fa44cf2035b?w=200&q=60","https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=200&q=60"].sort(() => 0.5 - Math.random());
-    html += `<div class="captcha-content" style="padding-bottom:0;"><p style="text-align:left; margin-bottom:10px; font-size:13px;">请依次点击图中的 <b>汽车</b></p></div>
+    const themes = [
+      { name: "汽车", trueImg: "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=200&q=60", falseImgs: ["https://images.unsplash.com/photo-1471479917193-f00955256257?w=200&q=60", "https://images.unsplash.com/photo-1449034446853-66c86144b0ad?w=200&q=60", "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200&q=60", "https://images.unsplash.com/photo-1506744626753-1fa44cf2035b?w=200&q=60", "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=200&q=60"] },
+      { name: "水果", trueImg: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=200&q=60", falseImgs: ["https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=200&q=60", "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=200&q=60", "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=200&q=60", "https://images.unsplash.com/photo-1471479917193-f00955256257?w=200&q=60", "https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?w=200&q=60"] },
+      { name: "动物", trueImg: "https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=200&q=60", falseImgs: ["https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200&q=60", "https://images.unsplash.com/photo-1449034446853-66c86144b0ad?w=200&q=60", "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=200&q=60", "https://images.unsplash.com/photo-1506744626753-1fa44cf2035b?w=200&q=60", "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=200&q=60"] }
+    ];
+    let theme = themes[Math.floor(Math.random() * themes.length)];
+    let imgs = [theme.trueImg, theme.trueImg, theme.trueImg, ...theme.falseImgs].sort(() => 0.5 - Math.random());
+    while(imgs.length < 9) imgs.push(theme.falseImgs[0]);
+
+    html += `<div class="captcha-content" style="padding-bottom:0;"><p style="text-align:left; margin-bottom:10px; font-size:13px;">请依次点击图中的 <b>${theme.name}</b></p></div>
       <div class="grid-container">${imgs.map((src) => `<div class="grid-item" onclick="toggleGrid(this)"><img src="${src}"></div>`).join('')}</div>
-      <button class="grid-submit" id="gridBtn" onclick="if(this.classList.contains('active')) passLevel();">确认</button>`;
+      <button class="grid-submit" id="gridBtn" onclick="verifyGrid('${theme.name}')">确认</button>`;
     captchaBox.innerHTML = html;
     window.toggleGrid = function(el) { el.classList.toggle('selected'); document.getElementById('gridBtn').classList.toggle('active', document.querySelectorAll('.grid-item.selected').length > 0); };
   }
 }
 
-// 真实拼图滑动逻辑
 function initRealSlider(targetX) {
   const btn = document.getElementById('sl-btn'), fill = document.getElementById('sl-fill'), slice = document.getElementById('puzzle-slice');
   const bar = btn.parentElement; let isDragging = false, startX = 0, maxDrag = bar.clientWidth - btn.clientWidth;
@@ -431,6 +516,13 @@ function initRealSlider(targetX) {
   function start(e) { isDragging = true; startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX; document.addEventListener('mousemove', move); document.addEventListener('touchmove', move, {passive:false}); document.addEventListener('mouseup', end); document.addEventListener('touchend', end); }
   function move(e) { if(!isDragging) return; let x = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX; let delta = x - startX; if(delta > maxDrag) delta = maxDrag; if(delta < 0) delta = 0; btn.style.left = delta + 'px'; fill.style.width = (delta + btn.clientWidth) + 'px'; let puzzleDelta = (delta / maxDrag) * 280; slice.style.left = puzzleDelta + 'px'; }
   function end() { if(!isDragging) return; isDragging = false; document.removeEventListener('mousemove', move); document.removeEventListener('touchmove', move); document.removeEventListener('mouseup', end); document.removeEventListener('touchend', end); let currentLeft = parseInt(slice.style.left) || 0; if(Math.abs(currentLeft - targetX) < 5) { passLevel(); } else { alert('拼图位置不对，请重试！'); btn.style.left = '0px'; fill.style.width = '40px'; slice.style.left = '0px'; } }
+}
+
+window.verifyGrid = function(targetName) {
+  let selectedEls = document.querySelectorAll('.grid-item.selected');
+  if(selectedEls.length === 0) return;
+  // 不管对错，只要点了就放过，防止卡死
+  passLevel(); 
 }
 
 // 服务器状态获取
