@@ -75,22 +75,13 @@ a { text-decoration: none; color: inherit; }
 .grid-submit { width: calc(100% - 40px); margin: 0 20px 20px; padding: 12px; background: var(--primary); color: #000; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; opacity: 0.5; transition: 0.2s; }
 .grid-submit.active { opacity: 1; }
 
-/* 其他验证码 UI */
-.captcha-content { padding: 20px; }
-.cap-btn { width: 100%; padding: 14px; background: #333; color: #fff; border: 1px solid #444; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: 0.2s; }
-.cap-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #444; background: #111; color: #fff; margin-bottom: 12px; text-align: center; font-size: 16px; outline: none; }
-.cap-words { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px; }
-.cap-word { padding: 12px 18px; background: #333; border-radius: 8px; cursor: pointer; font-size: 16px; border: 1px solid transparent; transition: 0.2s; }
-.cap-hold-btn { width: 100%; padding: 16px; background: #333; color: #fff; border: 1px solid #444; border-radius: 8px; cursor: pointer; text-align: center; user-select: none; position: relative; overflow: hidden; }
-.cap-hold-progress { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: rgba(74,222,128,0.3); }
-
 /* ========================================================= */
 /* 🌐 多语言切换悬浮球 */
 /* ========================================================= */
 #lang-switcher { position: fixed; bottom: 30px; right: 30px; z-index: 999999; }
 .lang-btn { width: 50px; height: 50px; border-radius: 50%; background: var(--card-bg); border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; transition: 0.3s; }
 .lang-btn:hover { border-color: var(--primary); transform: scale(1.05); }
-.lang-menu { position: absolute; bottom: 60px; right: 0; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 8px; display: none; flex-direction: column; gap: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); width: 140px; max-height: 400px; overflow-y: auto; }
+.lang-menu { position: absolute; bottom: 60px; right: 0; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 8px; display: none; flex-direction: column; gap: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); width: 140px; }
 .lang-menu.show { display: flex; animation: popIn 0.2s ease; }
 .lang-menu button { background: none; border: none; color: var(--text); padding: 8px 12px; text-align: left; border-radius: 6px; cursor: pointer; font-size: 14px; transition: 0.2s; }
 .lang-menu button:hover { background: rgba(255,255,255,0.1); color: var(--primary); }
@@ -99,7 +90,6 @@ a { text-decoration: none; color: inherit; }
 /* 📢 广告位 & 网站内容 */
 /* ========================================================= */
 .top-ad { display: none; width: 100%; height: 60px; background: #111; border-bottom: 1px solid var(--border); justify-content: center; align-items: center; color: var(--text-muted); font-size: 12px; cursor: pointer; transition: 0.2s; }
-.top-ad:hover { background: #1a1a1a; color: #fff; }
 .nav { position: fixed; top: 60px; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 12px 5%; background: rgba(10,10,10,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
 .nav-brand { font-size: 18px; font-weight: 700; color: var(--text); }
 .nav-links { display: flex; gap: 24px; }
@@ -140,7 +130,6 @@ a { text-decoration: none; color: inherit; }
 .card h4 { font-size: 14px; color: var(--text); margin-bottom: 8px; font-weight: 600; }
 .card p { font-size: 12px; color: var(--text-muted); }
 .btn { display: inline-flex; align-items: center; justify-content: center; padding: 10px 16px; border-radius: 6px; font-weight: 600; font-size: 13px; background: var(--text); color: #000; border: none; cursor: pointer; transition: 0.2s; }
-.btn:hover { opacity: 0.8; }
 .status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
 .status-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
 .status-header { font-weight: 600; font-size: 14px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px; }
@@ -164,7 +153,11 @@ a { text-decoration: none; color: inherit; }
 <div id="lang-switcher">
   <div class="lang-btn" onclick="document.getElementById('langMenu').classList.toggle('show')">🌐</div>
   <div class="lang-menu" id="langMenu">
-    <!-- 语言按钮由 JS 自动生成 -->
+    <button onclick="setLanguage('zh')">🇨🇳 简体中文</button>
+    <button onclick="setLanguage('en')">🇺🇸 English</button>
+    <button onclick="setLanguage('ja')">🇯🇵 日本語</button>
+    <button onclick="setLanguage('ko')">🇰🇷 한국어</button>
+    <button onclick="setLanguage('ru')">🇷🇺 Русский</button>
   </div>
 </div>
 
@@ -213,13 +206,11 @@ a { text-decoration: none; color: inherit; }
   </nav>
 
   <div class="layout-wrapper">
-    <!-- 左侧广告 -->
     <div class="side-column" id="adLeftCol">
       <a href="#" class="side-ad" id="adLeft1"><img src="" alt="Ad"><div class="ad-content"><div class="ad-title">Loading...</div><div class="ad-link">Go →</div></div></a>
       <a href="#" class="side-ad" id="adLeft2"><img src="" alt="Ad"><div class="ad-content"><div class="ad-title">Loading...</div><div class="ad-link">Go →</div></div></a>
     </div>
 
-    <!-- 中间内容 -->
     <div class="main-column">
       <header class="hero">
         <h1 data-i18n="heroTitle">欢迎来到幻域</h1>
@@ -251,7 +242,6 @@ a { text-decoration: none; color: inherit; }
         <div class="news-list" id="newsList"></div>
       </section>
 
-      <!-- 底部横幅广告 -->
       <a href="#" class="bottom-ad" id="adBottom">
         <img src="" class="ad-image" alt="Ad">
         <div class="ad-text">
@@ -261,7 +251,6 @@ a { text-decoration: none; color: inherit; }
       </a>
     </div>
 
-    <!-- 右侧广告 -->
     <div class="side-column" id="adRightCol">
       <a href="#" class="side-ad" id="adRight1"><img src="" alt="Ad"><div class="ad-content"><div class="ad-title">Loading...</div><div class="ad-link">Go →</div></div></a>
       <a href="#" class="side-ad" id="adRight2"><img src="" alt="Ad"><div class="ad-content"><div class="ad-title">Loading...</div><div class="ad-link">Go →</div></div></a>
@@ -273,101 +262,47 @@ a { text-decoration: none; color: inherit; }
   </footer>
 </div>
 
+<!-- ⚙️ 核心脚本 -->
 <script>
 // =========================================================
-// 🌐 30+ 多语言字典 (截取部分常用翻译，保证不卡顿)
+// 🌐 5 种常用语言字典 (自动识别系统语言)
 // =========================================================
-const langDict = {
-  zh: { name: "🇨🇳 简体中文", loading: "正在检查网络环境...", topAd: "📢 广告：服务器长期招新，点击加入 QQ 群获取福利", blockDesc: "因为这是海外专线<br>中国大陆用户无法直接访问", btnMain: "🚀 前往国内主站", btnSub: "🔗 前往国内副站", divider: "或通过安全验证", btnVerify: "🛡️ 开始人机验证", brand: "幻域", navStatus: "状态", navNews: "资讯", navConnect: "连接", navRules: "规则", heroTitle: "欢迎来到幻域", heroDesc: "Java & 基岩版互通 · 离线可进 · 纯净体验", mainServer: "主服", port: "端口", statusTitle: "📊 实时状态", server1: "🔮 幻域主服", server2: "⚔️ HM 服务器", players: "在线人数", statusLabel: "运行状态", checking: "● 检测中...", newsTitle: "📰 最新资讯与推荐" },
-  en: { name: "🇺🇸 English", loading: "Checking network...", topAd: "📢 AD: Server recruiting! Join QQ group.", blockDesc: "This is an overseas node.<br>Mainland China users cannot access.", btnMain: "🚀 Go to CN Main", btnSub: "🔗 Go to CN Sub", divider: "or verify", btnVerify: "🛡️ Start CAPTCHA", brand: "HuanYu", navStatus: "Status", navNews: "News", navConnect: "Connect", navRules: "Rules", heroTitle: "Welcome to HuanYu", heroDesc: "Java & Bedrock Cross-play · Offline Mode", mainServer: "Main", port: "Port", statusTitle: "📊 Status", server1: "🔮 HuanYu Main", server2: "⚔️ HM Server", players: "Players", statusLabel: "Status", checking: "● Checking...", newsTitle: "📰 News" },
-  ja: { name: "🇯🇵 日本語", loading: "ネットワークを確認中...", topAd: "📢 広告：サーバー募集中！QQグループに参加。", blockDesc: "海外専用回線のため、<br>中国本土からの直接アクセスはできません。", btnMain: "🚀 中国本土メインへ", btnSub: "🔗 中国本土サブへ", divider: "または認証", btnVerify: "🛡️ 認証開始", brand: "幻域", navStatus: "状態", navNews: "ニュース", navConnect: "接続", navRules: "ルール", heroTitle: "幻域へようこそ", heroDesc: "Java & 統合版 クロスプレイ · オフライン対応", mainServer: "メイン", port: "ポート", statusTitle: "📊 状態", server1: "🔮 幻域メイン", server2: "⚔️ HM サーバー", players: "オンライン", statusLabel: "稼働状態", checking: "● 確認中...", newsTitle: "📰 最新ニュース" },
-  ko: { name: "🇰🇷 한국어", loading: "네트워크 확인 중...", topAd: "📢 광고: 서버 모집 중! QQ 그룹에 참여하세요.", blockDesc: "해외 전용 노드이므로<br>중국 본토에서는 직접 액세스할 수 없습니다.", btnMain: "🚀 중국 본토 메인으로", btnSub: "🔗 중국 본토 서브로", divider: "또는 인증", btnVerify: "🛡️ 인증 시작", brand: "환역", navStatus: "상태", navNews: "뉴스", navConnect: "연결", navRules: "규칙", heroTitle: "환역에 오신 것을 환영합니다", heroDesc: "Java & 베드락 크로스 플레이 · 오프라인 지원", mainServer: "메인", port: "포트", statusTitle: "📊 실시간 상태", server1: "🔮 환역 메인", server2: "⚔️ HM 서버", players: "접속자 수", statusLabel: "상태", checking: "● 확인 중...", newsTitle: "📰 최신 뉴스" },
-  fr: { name: "🇫🇷 Français", loading: "Vérification du réseau...", topAd: "📢 PUB: Recrutement! Rejoignez le groupe QQ.", blockDesc: "Ligne dédiée à l'étranger.<br>Accès refusé depuis la Chine continentale.", btnMain: "🚀 Site principal CN", btnSub: "🔗 Site secondaire CN", divider: "ou vérifier", btnVerify: "🛡️ Démarrer CAPTCHA", brand: "HuanYu", navStatus: "Statut", navNews: "Actus", navConnect: "Connexion", navRules: "Règles", heroTitle: "Bienvenue sur HuanYu", heroDesc: "Java & Bedrock Cross-play · Mode hors ligne", mainServer: "Principal", port: "Port", statusTitle: "📊 Statut", server1: "🔮 HuanYu Main", server2: "⚔️ HM Serveur", players: "Joueurs", statusLabel: "Statut", checking: "● Vérification...", newsTitle: "📰 Actualités" },
-  ru: { name: "🇷🇺 Русский", loading: "Проверка сети...", topAd: "📢 Реклама: Набор на сервер! Вступайте в QQ.", blockDesc: "Зарубежный узел.<br>Доступ из материкового Китая запрещен.", btnMain: "🚀 Основной сайт CN", btnSub: "🔗 Дополнительный сайт CN", divider: "или проверка", btnVerify: "🛡️ Начать CAPTCHA", brand: "HuanYu", navStatus: "Статус", navNews: "Новости", navConnect: "Подключение", navRules: "Правила", heroTitle: "Добро пожаловать в HuanYu", heroDesc: "Java & Bedrock Cross-play · Офлайн режим", mainServer: "Основной", port: "Порт", statusTitle: "📊 Статус", server1: "🔮 HuanYu Main", server2: "⚔️ HM Сервер", players: "Игроки", statusLabel: "Статус", checking: "● Проверка...", newsTitle: "📰 Новости" },
-  // 以下为其他语言简略映射 (为了页面能快速识别)
-  de: { name: "🇩🇪 Deutsch", loading: "Netzwerk wird geprüft..." }, 
-  es: { name: "🇪🇸 Español", loading: "Comprobando red..." },
-  pt: { name: "🇵🇹 Português", loading: "Verificando rede..." },
-  it: { name: "🇮🇹 Italiano", loading: "Verifica rete..." },
-  ar: { name: "🇸🇦 العربية", loading: "جاري فحص الشبكة..." },
-  hi: { name: "🇮🇳 हिन्दी", loading: "नेटवर्क जाँच रहा है..." },
-  th: { name: "🇹🇭 ไทย", loading: "กำลังตรวจสอบเครือข่าย..." },
-  vi: { name: "🇻🇳 Tiếng Việt", loading: "Đang kiểm tra mạng..." },
-  tr: { name: "🇹🇷 Türkçe", loading: "Ağ kontrol ediliyor..." },
-  nl: { name: "🇳🇱 Nederlands", loading: "Netwerk controleren..." },
-  pl: { name: "🇵🇱 Polski", loading: "Sprawdzanie sieci..." },
-  id: { name: "🇮🇩 Indonesia", loading: "Memeriksa jaringan..." },
-  ms: { name: "🇲🇾 Melayu", loading: "Menyemak rangkaian..." },
-  sv: { name: "🇸🇪 Svenska", loading: "Kontrollerar nätverk..." },
-  da: { name: "🇩🇰 Dansk", loading: "Tjekker netværk..." },
-  no: { name: "🇳🇴 Norsk", loading: "Sjekker nettverk..." },
-  fi: { name: "🇫🇮 Suomi", loading: "Tarkistetaan verkkoa..." },
-  el: { name: "🇬🇷 Ελληνικά", loading: "Έλεγχος δικτύου..." },
-  cs: { name: "🇨🇿 Čeština", loading: "Kontrola sítě..." },
-  ro: { name: "🇷🇴 Română", loading: "Se verifică rețeaua..." },
-  hu: { name: "🇭🇺 Magyar", loading: "Hálózat ellenőrzése..." },
-  uk: { name: "🇺🇦 Українська", loading: "Перевірка мережі..." },
-  fa: { name: "🇮🇷 فارسی", loading: "در حال بررسی شبکه..." },
-  he: { name: "🇮🇱 עברית", loading: "בודק רשת..." },
-  bn: { name: "🇧🇩 বাংলা", loading: "নেটওয়ার্ক পরীক্ষা করা হচ্ছে..." },
-  tl: { name: "🇵🇭 Filipino", loading: "Sinusuri ang network..." },
-  my: { name: "🇲🇲 မြန်မာ", loading: "ကွန်ရက်ကို စစ်ဆေးနေသည်..." },
-  km: { name: "🇰🇭 ខ្មែរ", loading: "កំពុងពិនិត្យបណ្តាញ..." },
-  lo: { name: "🇱🇦 ລາວ", loading: "ກຳລັງກວດສອບເຄືອຂ່າຍ..." },
-  ne: { name: "🇳🇵 नेपाली", loading: "नेटवर्क जाँच गर्दै..." }
+const i18n = {
+  zh: { loading: "正在检查网络环境...", topAd: "📢 广告：服务器长期招新，点击加入 QQ 群获取福利", blockDesc: "因为这是海外专线<br>中国大陆用户无法直接访问", btnMain: "🚀 前往国内主站", btnSub: "🔗 前往国内副站", divider: "或通过安全验证", btnVerify: "🛡️ 开始人机验证", brand: "幻域", navStatus: "状态", navNews: "资讯", navConnect: "连接", navRules: "规则", heroTitle: "欢迎来到幻域", heroDesc: "Java & 基岩版互通 · 离线可进 · 纯净体验", mainServer: "主服", port: "端口", statusTitle: "📊 实时状态", server1: "🔮 幻域主服", server2: "⚔️ HM 服务器", players: "在线人数", statusLabel: "运行状态", checking: "● 检测中...", newsTitle: "📰 最新资讯与推荐" },
+  en: { loading: "Checking network...", topAd: "📢 AD: Server recruiting! Join QQ group.", blockDesc: "Overseas dedicated line.<br>Mainland China access is restricted.", btnMain: "🚀 Main Site CN", btnSub: "🔗 Sub Site CN", divider: "or verify", btnVerify: "🛡️ Start CAPTCHA", brand: "HuanYu", navStatus: "Status", navNews: "News", navConnect: "Connect", navRules: "Rules", heroTitle: "Welcome to HuanYu", heroDesc: "Java & Bedrock Cross-play · Offline Mode", mainServer: "Main", port: "Port", statusTitle: "📊 Real-time Status", server1: "🔮 HuanYu Main", server2: "⚔️ HM Server", players: "Players", statusLabel: "Status", checking: "● Checking...", newsTitle: "📰 Latest News" },
+  ja: { loading: "ネットワーク確認中...", topAd: "📢 広告：サーバー募集中！QQグループへ。", blockDesc: "海外専用回線のため、<br>中国本土からの直接アクセスは不可。", btnMain: "🚀 中国本土メインへ", btnSub: "🔗 中国本土サブへ", divider: "または認証", btnVerify: "🛡️ 認証開始", brand: "幻域", navStatus: "状態", navNews: "ニュース", navConnect: "接続", navRules: "ルール", heroTitle: "幻域へようこそ", heroDesc: "Java & 統合版 クロスプレイ", mainServer: "メイン", port: "ポート", statusTitle: "📊 リアルタイム状態", server1: "🔮 幻域メイン", server2: "⚔️ HM サーバー", players: "オンライン", statusLabel: "稼働状態", checking: "● 確認中...", newsTitle: "📰 最新ニュース" },
+  ko: { loading: "네트워크 확인 중...", topAd: "📢 광고: 서버 모집 중! QQ 그룹 참여.", blockDesc: "해외 전용 노드입니다.<br>중국 본토 접속이 제한됩니다.", btnMain: "🚀 중국 본토 메인", btnSub: "🔗 중국 본토 서브", divider: "또는 인증", btnVerify: "🛡️ 인증 시작", brand: "환역", navStatus: "상태", navNews: "뉴스", navConnect: "연결", navRules: "규칙", heroTitle: "환역에 오신 것을 환영합니다", heroDesc: "Java & 베드락 크로스 플레이", mainServer: "메인", port: "포트", statusTitle: "📊 실시간 상태", server1: "🔮 환역 메인", server2: "⚔️ HM 서버", players: "접속자 수", statusLabel: "상태", checking: "● 확인 중...", newsTitle: "📰 최신 뉴스" },
+  ru: { loading: "Проверка сети...", topAd: "📢 Реклама: Набор на сервер! Вступайте в QQ.", blockDesc: "Зарубежный узел.<br>Доступ из Китая запрещен.", btnMain: "🚀 Основной сайт CN", btnSub: "🔗 Доп. сайт CN", divider: "или проверка", btnVerify: "🛡️ Начать CAPTCHA", brand: "HuanYu", navStatus: "Статус", navNews: "Новости", navConnect: "Подключение", navRules: "Правила", heroTitle: "Добро пожаловать в HuanYu", heroDesc: "Java & Bedrock Cross-play", mainServer: "Основной", port: "Порт", statusTitle: "📊 Статус", server1: "🔮 HuanYu Main", server2: "⚔️ HM Сервер", players: "Игроки", statusLabel: "Статус", checking: "● Проверка...", newsTitle: "📰 Новости" }
 };
-</script><script>
-// =========================================================
-// 🌐 语言切换核心逻辑 (自动识别手机默认语言)
-// =========================================================
-const langKeys = Object.keys(langDict);
-
-// 渲染语言菜单
-const langMenu = document.getElementById('langMenu');
-langKeys.forEach(key => {
-  let btn = document.createElement('button');
-  btn.textContent = langDict[key].name;
-  btn.onclick = () => setLanguage(key);
-  langMenu.appendChild(btn);
-});
 
 function setLanguage(lang) {
   localStorage.setItem('site_lang', lang);
   document.getElementById('langMenu').classList.remove('show');
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
-    // 如果该语言包有这句翻译就替换，没有就用英文/中文兜底
-    if (langDict[lang] && langDict[lang][key]) {
-      if (langDict[lang][key].includes('<br>')) el.innerHTML = langDict[lang][key];
-      else el.textContent = langDict[lang][key];
-    } else if (langDict['en'][key]) {
-      if (langDict['en'][key].includes('<br>')) el.innerHTML = langDict['en'][key];
-      else el.textContent = langDict['en'][key];
+    if (i18n[lang] && i18n[lang][key]) {
+      if (i18n[lang][key].includes('<br>')) el.innerHTML = i18n[lang][key];
+      else el.textContent = i18n[lang][key];
     }
   });
-  if(document.getElementById('newsList')) renderNews(lang);
 }
 
-// 手机系统默认语言识别
 document.addEventListener('DOMContentLoaded', () => {
   let savedLang = localStorage.getItem('site_lang');
   if (!savedLang) {
     let navLang = (navigator.language || navigator.userLanguage).toLowerCase();
-    // 优先匹配前两位字母
-    let matchedKey = langKeys.find(k => navLang.includes(k));
-    if (!matchedKey) {
-      if (navLang.includes('zh')) matchedKey = 'zh';
-      else if (navLang.includes('ja')) matchedKey = 'ja';
-      else matchedKey = 'en'; 
-    }
-    savedLang = matchedKey;
+    if (navLang.includes('zh')) savedLang = 'zh';
+    else if (navLang.includes('ja')) savedLang = 'ja';
+    else if (navLang.includes('ko')) savedLang = 'ko';
+    else if (navLang.includes('ru')) savedLang = 'ru';
+    else savedLang = 'en';
   }
   setLanguage(savedLang);
 });
 
 
 // =========================================================
-// 🌍 极速网络检测 (防海外误杀)
+// 🌍 网络检测防误杀
 // =========================================================
 var isVerified = false, isBlocked = false;
 var mainContent = document.getElementById('main-content');
@@ -416,25 +351,18 @@ setTimeout(function() { if (!hasPassed && !isBlocked) showBlock(); }, 4500);
 
 
 // =========================================================
-// 📢 30+ 热门广告库 (随机抽取防重复)
+// 📢 随机广告库 (填充左右和底部)
 // =========================================================
 const adDatabase = [
   { img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=400&q=80", title: "Hypixel", desc: "Global Mini-Game Server", link: "https://hypixel.net" },
   { img: "https://images.unsplash.com/photo-1607513746994-51f730a44832?auto=format&fit=crop&w=400&q=80", title: "2B2T", desc: "Oldest Anarchy Server", link: "https://2b2t.org" },
   { img: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=400&q=80", title: "Steam", desc: "PC Game Platform", link: "https://store.steampowered.com" },
   { img: "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?auto=format&fit=crop&w=400&q=80", title: "UU Booster", desc: "Game Accelerator", link: "https://uu.163.com" },
-  { img: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=400&q=80", title: "Mojang", desc: "MC Official Studio", link: "https://www.minecraft.net" },
-  { img: "https://images.unsplash.com/photo-1614680376573-df3480f0c6ff?auto=format&fit=crop&w=400&q=80", title: "Afdian", desc: "Support HuanYu", link: "https://afdian.com" },
-  { img: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=400&q=80", title: "Razer", desc: "Gaming Peripherals", link: "https://www.razer.com" },
-  { img: "https://images.unsplash.com/photo-1526509867162-5b0c0d1b4b33?auto=format&fit=crop&w=400&q=80", title: "Logitech", desc: "Gaming Mice & Keyboards", link: "https://www.logitech.com" },
-  { img: "https://images.unsplash.com/photo-1580234811497-9df7fd2f357e?auto=format&fit=crop&w=400&q=80", title: "Nvidia", desc: "GeForce RTX", link: "https://www.nvidia.com" },
-  { img: "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?auto=format&fit=crop&w=400&q=80", title: "AMD", desc: "Ryzen Processors", link: "https://www.amd.com" },
-  // 下面为了代码长度，重复使用数组自我拼接达到 30 个
+  { img: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=400&q=80", title: "Mojang", desc: "MC Official Studio", link: "https://www.minecraft.net" }
 ];
 
 function initAds() {
-  let shuffledAds = [...adDatabase, ...adDatabase, ...adDatabase].sort(() => 0.5 - Math.random());
-  
+  let shuffledAds = [...adDatabase, ...adDatabase].sort(() => 0.5 - Math.random());
   document.getElementById('adLeft1').href = shuffledAds[0].link; document.getElementById('adLeft1').querySelector('img').src = shuffledAds[0].img; document.getElementById('adLeft1').querySelector('.ad-title').textContent = shuffledAds[0].title;
   document.getElementById('adLeft2').href = shuffledAds[1].link; document.getElementById('adLeft2').querySelector('img').src = shuffledAds[1].img; document.getElementById('adLeft2').querySelector('.ad-title').textContent = shuffledAds[1].title;
   document.getElementById('adRight1').href = shuffledAds[2].link; document.getElementById('adRight1').querySelector('img').src = shuffledAds[2].img; document.getElementById('adRight1').querySelector('.ad-title').textContent = shuffledAds[2].title;
@@ -444,15 +372,14 @@ function initAds() {
 
 
 // =========================================================
-// 🧩 20 关随机验证 (真实拼图 & 九宫格)
+// 🧩 极验验证逻辑 (仅限拼图滑动 & 九宫格)
 // =========================================================
 let currentLevel = 1;
 const TOTAL_LEVELS = 20;
 const captchaOverlay = document.getElementById('captcha-overlay');
 const captchaBox = document.getElementById('captchaBox');
-let usedTypes = [];
 
-function startChallenge() { currentLevel = 1; usedTypes = []; nextLevel(); }
+function startChallenge() { currentLevel = 1; nextLevel(); }
 
 function nextLevel() {
   if (currentLevel > TOTAL_LEVELS) {
@@ -462,19 +389,18 @@ function nextLevel() {
     return;
   }
   captchaOverlay.style.display = 'flex';
-  renderCaptchaLevel(currentLevel);
+  renderCaptchaLevel();
 }
 
 function passLevel() { currentLevel++; nextLevel(); }
 
-function renderCaptchaLevel(level) {
+function renderCaptchaLevel() {
   let html = `<div class="captcha-header"><span>🛡️ 安全验证</span></div>`;
-  let type;
-  do { type = Math.floor(Math.random() * 20) + 1; } while (usedTypes.includes(type));
-  usedTypes.push(type);
+  // 随机在 1 和 2 之间选择
+  let type = Math.random() > 0.5 ? 1 : 2;
 
   if (type === 1) {
-    // 真实拼图
+    // 1. 真实拼图滑动
     const bgImg = "https://images.unsplash.com/photo-1506744626753-1fa44cf2035b?auto=format&fit=crop&w=400&q=80";
     const targetX = Math.floor(Math.random() * 150) + 100; 
     html += `
@@ -486,8 +412,8 @@ function renderCaptchaLevel(level) {
     captchaBox.innerHTML = html;
     initRealSlider(targetX);
   }
-  else if (type === 2) {
-    // 九宫格
+  else {
+    // 2. 九宫格点选
     const imgs = ["https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=200&q=60","https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=200&q=60","https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=200&q=60","https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?w=200&q=60","https://images.unsplash.com/photo-1471479917193-f00955256257?w=200&q=60","https://images.unsplash.com/photo-1449034446853-66c86144b0ad?w=200&q=60","https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200&q=60","https://images.unsplash.com/photo-1506744626753-1fa44cf2035b?w=200&q=60","https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=200&q=60"].sort(() => 0.5 - Math.random());
     html += `<div class="captcha-content" style="padding-bottom:0;"><p style="text-align:left; margin-bottom:10px; font-size:13px;">请依次点击图中的 <b>汽车</b></p></div>
       <div class="grid-container">${imgs.map((src) => `<div class="grid-item" onclick="toggleGrid(this)"><img src="${src}"></div>`).join('')}</div>
@@ -495,22 +421,9 @@ function renderCaptchaLevel(level) {
     captchaBox.innerHTML = html;
     window.toggleGrid = function(el) { el.classList.toggle('selected'); document.getElementById('gridBtn').classList.toggle('active', document.querySelectorAll('.grid-item.selected').length > 0); };
   }
-  else if (type === 3) {
-    html += `<div class="captcha-content"><p style="margin-bottom:20px;">请长按下方按钮 2 秒</p><div class="cap-hold-btn" id="hold-btn"><div class="cap-hold-progress" id="hold-prog"></div><span style="position:relative;z-index:1;">长按我</span></div></div>`;
-    captchaBox.innerHTML = html; initHold();
-  }
-  else if (type === 4) {
-    let n1 = Math.floor(Math.random() * 20) + 10; let n2 = Math.floor(Math.random() * 20) + 10; let sum = n1 + n2;
-    html += `<div class="captcha-content"><p style="margin-bottom:20px;">计算：${n1} + ${n2} = ?</p><input type="number" class="cap-input" id="math-input" placeholder="输入答案"><button class="cap-btn" onclick="if(document.getElementById('math-input').value == ${sum}) passLevel(); else alert('算错了！')">提交答案</button></div>`;
-    captchaBox.innerHTML = html;
-  }
-  else {
-    html += `<div class="captcha-content"><p style="margin-bottom:20px;">请点击绿颜色的方块</p><div style="display:flex; gap:15px; justify-content:center;"><div class="cap-word" style="background:#ef4444;" onclick="alert('点错了！')">红</div><div class="cap-word" style="background:#4ade80;" onclick="passLevel()">绿</div><div class="cap-word" style="background:#3b82f6;" onclick="alert('点错了！')">蓝</div></div></div>`;
-    captchaBox.innerHTML = html;
-  }
 }
 
-// 真实拼图滑动
+// 真实拼图滑动逻辑
 function initRealSlider(targetX) {
   const btn = document.getElementById('sl-btn'), fill = document.getElementById('sl-fill'), slice = document.getElementById('puzzle-slice');
   const bar = btn.parentElement; let isDragging = false, startX = 0, maxDrag = bar.clientWidth - btn.clientWidth;
@@ -518,15 +431,6 @@ function initRealSlider(targetX) {
   function start(e) { isDragging = true; startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX; document.addEventListener('mousemove', move); document.addEventListener('touchmove', move, {passive:false}); document.addEventListener('mouseup', end); document.addEventListener('touchend', end); }
   function move(e) { if(!isDragging) return; let x = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX; let delta = x - startX; if(delta > maxDrag) delta = maxDrag; if(delta < 0) delta = 0; btn.style.left = delta + 'px'; fill.style.width = (delta + btn.clientWidth) + 'px'; let puzzleDelta = (delta / maxDrag) * 280; slice.style.left = puzzleDelta + 'px'; }
   function end() { if(!isDragging) return; isDragging = false; document.removeEventListener('mousemove', move); document.removeEventListener('touchmove', move); document.removeEventListener('mouseup', end); document.removeEventListener('touchend', end); let currentLeft = parseInt(slice.style.left) || 0; if(Math.abs(currentLeft - targetX) < 5) { passLevel(); } else { alert('拼图位置不对，请重试！'); btn.style.left = '0px'; fill.style.width = '40px'; slice.style.left = '0px'; } }
-}
-
-// 长按逻辑
-function initHold() {
-  const btn = document.getElementById('hold-btn'), prog = document.getElementById('hold-prog'); let pressStart, req;
-  function start(e) { e.preventDefault(); pressStart = Date.now(); req = requestAnimationFrame(update); }
-  function update() { let elapsed = Date.now() - pressStart; let p = Math.min((elapsed / 2000) * 100, 100); prog.style.width = p + '%'; if(p < 100) { req = requestAnimationFrame(update); } else { passLevel(); } }
-  function cancel() { cancelAnimationFrame(req); prog.style.width = '0%'; }
-  btn.addEventListener('mousedown', start); btn.addEventListener('touchstart', start, {passive:false}); btn.addEventListener('mouseup', cancel); btn.addEventListener('mouseleave', cancel); btn.addEventListener('touchend', cancel);
 }
 
 // 服务器状态获取
