@@ -24,23 +24,22 @@ a { text-decoration: none; color: inherit; }
 
 #main-content { display: none; min-height: 100vh; }
 
-/* ========================================================= */
-/* ⏳ 加载遮罩 */
-/* ========================================================= */
 #loading-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: var(--bg); z-index: 999999; display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--text-muted); font-size: 14px; }
 .spinner { width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 12px; }
 
 /* ========================================================= */
-/* 🛑 拦截面板 & 人脸识别面板 */
+/* 🛡️ 安全验证页面 */
 /* ========================================================= */
 #block-panel { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0,0,0,0.95); z-index: 99999; flex-direction: column; justify-content: center; align-items: center; animation: fadeIn 0.3s ease; }
-#block-panel .box { border: 1px solid var(--border); padding: 40px 30px; border-radius: 16px; max-width: 90%; width: 420px; background: var(--card-bg); text-align: center; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-#block-panel h1 { font-size: 36px; font-weight: 800; color: #ef4444; margin-bottom: 12px; }
+#block-panel .box { border: 1px solid var(--border); padding: 40px 30px; border-radius: 16px; max-width: 90%; width: 420px; background: var(--card-bg); text-align: center; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden;}
+#block-panel .box::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent)); }
+#block-panel .icon-shield { font-size: 48px; margin-bottom: 16px; display: inline-block; filter: drop-shadow(0 0 10px rgba(167,139,250,0.5)); }
+#block-panel h1 { font-size: 24px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
 #block-panel p { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
 #block-panel .btn-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
 #block-panel .nav-btn { display: block; padding: 12px; border-radius: 8px; font-weight: 600; font-size: 14px; border: 1px solid var(--border); background: #1a1a1a; transition: 0.2s; }
-#block-panel .nav-btn:hover { background: #2a2a2a; }
-#block-panel .btn-main { color: #ef4444; border-color: rgba(239,68,68,0.3); }
+#block-panel .nav-btn:hover { background: #2a2a2a; border-color: #444; }
+#block-panel .btn-main { color: var(--primary); border-color: rgba(255,122,198,0.3); }
 .divider { display: flex; align-items: center; text-align: center; color: #52525b; font-size: 12px; margin: 20px 0; }
 .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border); }
 .divider::before { margin-right: 10px; } .divider::after { margin-left: 10px; }
@@ -49,14 +48,16 @@ a { text-decoration: none; color: inherit; }
 .btn-face { background: var(--accent); color: #000; }
 
 /* ========================================================= */
-/* 🧩 验证弹窗 (极验风格) */
+/* 🧩 验证弹窗 */
 /* ========================================================= */
 #captcha-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 100000; justify-content: center; align-items: center; backdrop-filter: blur(10px); animation: fadeIn 0.2s ease; }
 .captcha-box { background: #1e1e1e; border: 1px solid #333; border-radius: 12px; width: 340px; padding: 0; box-shadow: 0 20px 40px rgba(0,0,0,0.6); text-align: center; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden; color: #fff; }
 .captcha-header { padding: 16px 20px; font-size: 16px; font-weight: 600; text-align: left; border-bottom: 1px solid #333; display: flex; align-items: center; gap: 8px; background: #252525; }
-.puzzle-container { position: relative; width: 100%; height: 180px; background-size: cover; background-position: center; overflow: hidden; background-color: #222; }
-.puzzle-slice { position: absolute; width: 50px; height: 50px; top: 50px; background: rgba(255,255,255,0.1); border: 2px solid #fff; box-shadow: 0 0 10px rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; color: #fff; font-weight: bold; z-index: 2; transition: left 0.1s; }
-.puzzle-hole { position: absolute; width: 50px; height: 50px; top: 50px; background: rgba(0,0,0,0.7); border: 1px dashed #999; border-radius: 4px; z-index: 1; }
+.puzzle-container { position: relative; width: 100%; height: 180px; overflow: hidden; background-color: #111; }
+.puzzle-bg-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.puzzle-slice { position: absolute; width: 50px; height: 50px; top: 50px; left: 0; border: 2px solid #fff; box-shadow: 0 0 10px rgba(0,0,0,0.8); z-index: 2; overflow: hidden; }
+.puzzle-slice img { position: absolute; height: 180px; width: 340px; object-fit: cover; }
+.puzzle-hole { position: absolute; width: 50px; height: 50px; top: 50px; background: rgba(0,0,0,0.6); border: 1px dashed #999; border-radius: 4px; z-index: 1; }
 .slider-wrap { padding: 20px; background: #252525; position: relative; }
 .slider-bar { width: 100%; height: 40px; background: #333; border-radius: 20px; position: relative; overflow: hidden; border: 1px solid #444; }
 .slider-fill { position: absolute; left: 0; top: 0; height: 100%; width: 40px; background: rgba(74,222,128,0.3); }
@@ -71,30 +72,26 @@ a { text-decoration: none; color: inherit; }
 .grid-submit.active { opacity: 1; }
 
 /* ========================================================= */
-/* 🎥 人脸识别弹窗 (本地模拟) */
+/* 🎥 人脸识别弹窗 */
 /* ========================================================= */
 #face-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.9); z-index: 100001; justify-content: center; align-items: center; flex-direction: column; animation: fadeIn 0.3s ease; }
 .face-box { position: relative; width: 320px; height: 320px; border-radius: 50%; overflow: hidden; border: 4px solid var(--accent); box-shadow: 0 0 30px rgba(125,211,252,0.4); background: #000; }
-#video-feed { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); /* 镜像 */ }
+#video-feed { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
 .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: rgba(125,211,252,0.8); box-shadow: 0 0 10px #7dd3fc; animation: scanAnim 2s linear infinite; }
 @keyframes scanAnim { 0% { top: 0; } 50% { top: 100%; } 100% { top: 0; } }
 .face-action-text { color: #fff; font-size: 20px; font-weight: bold; margin-top: 30px; margin-bottom: 20px; text-align: center; min-height: 30px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
 .face-tip { color: var(--text-muted); font-size: 13px; text-align: center; max-width: 300px; }
 
 /* ========================================================= */
-/* 🌐 多语言切换悬浮球 */
+/* 🌐 多语言切换 & 其他 */
 /* ========================================================= */
 #lang-switcher { position: fixed; bottom: 30px; right: 30px; z-index: 999999; }
 .lang-btn { width: 50px; height: 50px; border-radius: 50%; background: var(--card-bg); border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; transition: 0.3s; }
-.lang-btn:hover { border-color: var(--primary); transform: scale(1.05); }
 .lang-menu { position: absolute; bottom: 60px; right: 0; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 8px; display: none; flex-direction: column; gap: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); width: 140px; }
 .lang-menu.show { display: flex; animation: popIn 0.2s ease; }
 .lang-menu button { background: none; border: none; color: var(--text); padding: 8px 12px; text-align: left; border-radius: 6px; cursor: pointer; font-size: 14px; transition: 0.2s; }
 .lang-menu button:hover { background: rgba(255,255,255,0.1); color: var(--primary); }
 
-/* ========================================================= */
-/* 📢 广告位 & 网站内容 */
-/* ========================================================= */
 .top-ad { display: none; width: 100%; height: 60px; background: #111; border-bottom: 1px solid var(--border); justify-content: center; align-items: center; color: var(--text-muted); font-size: 12px; cursor: pointer; transition: 0.2s; }
 .nav { position: fixed; top: 60px; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 12px 5%; background: rgba(10,10,10,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
 .nav-brand { font-size: 18px; font-weight: 700; color: var(--text); }
@@ -143,6 +140,16 @@ a { text-decoration: none; color: inherit; }
 .status-label { font-size: 12px; color: var(--text-muted); }
 .status-num { font-size: 18px; font-weight: 700; color: var(--text); font-family: monospace; }
 .status-on { color: var(--success); font-weight: 500; font-size: 12px; }
+
+/* ========================================================= */
+/* 🖥️ 设备指纹信息面板 (新增) */
+/* ========================================================= */
+.sys-info-panel { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-top: 20px; }
+.sys-info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.sys-info-item { display: flex; justify-content: space-between; padding: 10px 14px; background: #09090b; border-radius: 8px; border: 1px solid #222; font-size: 12px; }
+.sys-info-item .key { color: var(--text-muted); }
+.sys-info-item .val { color: var(--primary); font-family: monospace; font-weight: bold; word-break: break-all; text-align: right; max-width: 60%;}
+
 @media (max-width: 768px) { 
   .nav-links { display: none; } .nav { top: 0; } 
   .layout-wrapper { padding: 70px 5px 20px; gap: 8px; flex-direction: row; }
@@ -152,6 +159,7 @@ a { text-decoration: none; color: inherit; }
   .side-ad .ad-title { font-size: 11px; text-align: center; }
   .bottom-ad { flex-direction: column; text-align: center; }
   .bottom-ad .ad-image { width: 100%; height: 120px; border-right: none; border-bottom: 1px solid var(--border); }
+  .sys-info-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -176,25 +184,25 @@ a { text-decoration: none; color: inherit; }
 <!-- 📢 顶部广告 -->
 <a href="https://awa.huanyu.jqu.cc" target="_blank" class="top-ad" id="topAd" data-i18n="topAd">📢 广告：服务器长期招新，点击加入 QQ 群获取福利</a>
 
-<!-- 🛑 拦截面板 -->
+<!-- 🛡️ 安全验证页面 -->
 <div id="block-panel">
   <div class="box">
-    <h1>403 FORBIDDEN</h1>
-    <p data-i18n="blockDesc">因为这是海外专线<br>中国大陆用户无法直接访问</p>
+    <div class="icon-shield">🛡️</div>
+    <h1>安全环境检测</h1>
+    <p>当前为海外专线节点，为了保障您的访问安全，请选择以下方式进行验证。</p>
     
     <div class="btn-group">
-      <a href="https://awa.huanyu.jqu.cc" class="nav-btn btn-main" data-i18n="btnMain">🚀 前往国内主站</a>
-      <a href="https://huanyu.jqu.cc" class="nav-btn" data-i18n="btnSub">🔗 前往国内副站</a>
+      <a href="https://awa.huanyu.jqu.cc" class="nav-btn btn-main" data-i18n="btnMain">🚀 前往国内主站 (免验证)</a>
+      <a href="https://huanyu.jqu.cc" class="nav-btn" data-i18n="btnSub">🔗 前往国内副站 (免验证)</a>
     </div>
 
-    <div class="divider" data-i18n="divider">或通过安全验证</div>
+    <div class="divider">或在此完成安全验证</div>
     
-    <!-- 两个按钮：人机验证 & 人脸模拟 -->
     <button class="start-verify-btn" onclick="startChallenge()">
-      <span data-i18n="btnVerify">🛡️ 开始人机验证</span>
+      <span data-i18n="btnVerify">🧩 开始滑动/点选验证</span>
     </button>
     <button class="start-verify-btn btn-face" onclick="startFaceScan()">
-      <span>📷 开始人脸识别</span>
+      <span>📷 开始人脸识别验证</span>
     </button>
   </div>
 </div>
@@ -204,14 +212,14 @@ a { text-decoration: none; color: inherit; }
   <div class="captcha-box" id="captchaBox"></div>
 </div>
 
-<!-- 🎥 人脸识别弹窗 (纯前端不传数据) -->
+<!-- 🎥 人脸识别弹窗 -->
 <div id="face-modal">
   <div class="face-box">
     <video id="video-feed" autoplay playsinline></video>
     <div class="scan-line"></div>
   </div>
-  <div class="face-action-text" id="face-action">正在打开摄像头...</div>
-  <div class="face-tip">当前为纯本地模拟验证，不会记录或上传任何面部数据。</div>
+  <div class="face-action-text" id="face-action">正在准备验证...</div>
+  <div class="face-tip" id="face-tip">当前为纯本地模拟验证，不会记录或上传任何面部数据。</div>
 </div>
 
 <!-- 🌐 正常网页内容 -->
@@ -228,6 +236,7 @@ a { text-decoration: none; color: inherit; }
 
   <div class="layout-wrapper">
     <div class="side-column" id="adLeftCol"></div>
+    
     <div class="main-column">
       <header class="hero">
         <h1 data-i18n="heroTitle">欢迎来到幻域</h1>
@@ -266,7 +275,21 @@ a { text-decoration: none; color: inherit; }
           <p>Loading...</p>
         </div>
       </a>
+
+      <!-- 🖥️ 新增的设备信息指纹面板 (放在最底部) -->
+      <section class="section" id="device-info">
+        <h2 class="section-title">📱 设备及安全环境信息</h2>
+        <div class="sys-info-panel">
+          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
+            以下信息仅供安全验证参考，完全在您的本地浏览器计算提取，<b>绝不会上传至任何服务器</b>。
+          </p>
+          <div class="sys-info-grid" id="sysInfoGrid">
+            <!-- JS 动态填充 -->
+          </div>
+        </div>
+      </section>
     </div>
+
     <div class="side-column" id="adRightCol"></div>
   </div>
 
@@ -281,11 +304,11 @@ a { text-decoration: none; color: inherit; }
 // 🌐 5 种常用语言字典
 // =========================================================
 const i18n = {
-  zh: { loading: "正在检查网络环境...", topAd: "📢 广告：服务器长期招新，点击加入 QQ 群获取福利", blockDesc: "因为这是海外专线<br>中国大陆用户无法直接访问", btnMain: "🚀 前往国内主站", btnSub: "🔗 前往国内副站", divider: "或通过安全验证", btnVerify: "🛡️ 开始人机验证", brand: "幻域", navStatus: "状态", navNews: "资讯", navConnect: "连接", navRules: "规则", heroTitle: "欢迎来到幻域", heroDesc: "Java & 基岩版互通 · 离线可进 · 纯净体验", mainServer: "主服", port: "端口", statusTitle: "📊 实时状态", server1: "🔮 幻域主服", server2: "⚔️ HM 服务器", players: "在线人数", statusLabel: "运行状态", checking: "● 检测中...", newsTitle: "📰 最新资讯与推荐" },
-  en: { loading: "Checking network...", topAd: "📢 AD: Server recruiting! Join QQ group.", blockDesc: "Overseas dedicated line.<br>Mainland China access is restricted.", btnMain: "🚀 Main Site CN", btnSub: "🔗 Sub Site CN", divider: "or verify", btnVerify: "🛡️ Start CAPTCHA", brand: "HuanYu", navStatus: "Status", navNews: "News", navConnect: "Connect", navRules: "Rules", heroTitle: "Welcome to HuanYu", heroDesc: "Java & Bedrock Cross-play · Offline Mode", mainServer: "Main", port: "Port", statusTitle: "📊 Real-time Status", server1: "🔮 HuanYu Main", server2: "⚔️ HM Server", players: "Players", statusLabel: "Status", checking: "● Checking...", newsTitle: "📰 Latest News" },
-  ja: { loading: "ネットワーク確認中...", topAd: "📢 広告：サーバー募集中！QQグループへ。", blockDesc: "海外専用回線のため、<br>中国本土からの直接アクセスは不可。", btnMain: "🚀 中国本土メインへ", btnSub: "🔗 中国本土サブへ", divider: "または認証", btnVerify: "🛡️ 認証開始", brand: "幻域", navStatus: "状態", navNews: "ニュース", navConnect: "接続", navRules: "ルール", heroTitle: "幻域へようこそ", heroDesc: "Java & 統合版 クロスプレイ", mainServer: "メイン", port: "ポート", statusTitle: "📊 リアルタイム状態", server1: "🔮 幻域メイン", server2: "⚔️ HM サーバー", players: "オンライン", statusLabel: "稼働状態", checking: "● 確認中...", newsTitle: "📰 最新ニュース" },
-  ko: { loading: "네트워크 확인 중...", topAd: "📢 광고: 서버 모집 중! QQ 그룹 참여.", blockDesc: "해외 전용 노드입니다.<br>중국 본토 접속이 제한됩니다.", btnMain: "🚀 중국 본토 메인", btnSub: "🔗 중국 본토 서브", divider: "또는 인증", btnVerify: "🛡️ 인증 시작", brand: "환역", navStatus: "상태", navNews: "뉴스", navConnect: "연결", navRules: "규칙", heroTitle: "환역에 오신 것을 환영합니다", heroDesc: "Java & 베드락 크로스 플레이", mainServer: "메인", port: "포트", statusTitle: "📊 실시간 상태", server1: "🔮 환역 메인", server2: "⚔️ HM 서버", players: "접속자 수", statusLabel: "상태", checking: "● 확인 중...", newsTitle: "📰 최신 뉴스" },
-  ru: { loading: "Проверка сети...", topAd: "📢 Реклама: Набор на сервер! Вступайте в QQ.", blockDesc: "Зарубежный узел.<br>Доступ из Китая запрещен.", btnMain: "🚀 Основной сайт CN", btnSub: "🔗 Доп. сайт CN", divider: "или проверка", btnVerify: "🛡️ Начать CAPTCHA", brand: "HuanYu", navStatus: "Статус", navNews: "Новости", navConnect: "Подключение", navRules: "Правила", heroTitle: "Добро пожаловать в HuanYu", heroDesc: "Java & Bedrock Cross-play", mainServer: "Основной", port: "Порт", statusTitle: "📊 Статус", server1: "🔮 HuanYu Main", server2: "⚔️ HM Сервер", players: "Игроки", statusLabel: "Статус", checking: "● Проверка...", newsTitle: "📰 Новости" }
+  zh: { loading: "正在检查网络环境...", topAd: "📢 广告：服务器长期招新，点击加入 QQ 群获取福利", blockDesc: "当前为海外专线节点，为了保障您的访问安全，请选择以下方式进行验证。", btnMain: "🚀 前往国内主站 (免验证)", btnSub: "🔗 前往国内副站 (免验证)", divider: "或在此完成安全验证", btnVerify: "🧩 开始滑动/点选验证", brand: "幻域", navStatus: "状态", navNews: "资讯", navConnect: "连接", navRules: "规则", heroTitle: "欢迎来到幻域", heroDesc: "Java & 基岩版互通 · 离线可进 · 纯净体验", mainServer: "主服", port: "端口", statusTitle: "📊 实时状态", server1: "🔮 幻域主服", server2: "⚔️ HM 服务器", players: "在线人数", statusLabel: "运行状态", checking: "● 检测中...", newsTitle: "📰 最新资讯与推荐" },
+  en: { loading: "Checking network...", topAd: "📢 AD: Server recruiting! Join QQ group.", blockDesc: "Overseas dedicated node. To ensure security, please verify below.", btnMain: "🚀 Main Site CN (No Verify)", btnSub: "🔗 Sub Site CN (No Verify)", divider: "or verify here", btnVerify: "🧩 Start Captcha", brand: "HuanYu", navStatus: "Status", navNews: "News", navConnect: "Connect", navRules: "Rules", heroTitle: "Welcome to HuanYu", heroDesc: "Java & Bedrock Cross-play · Offline Mode", mainServer: "Main", port: "Port", statusTitle: "📊 Real-time Status", server1: "🔮 HuanYu Main", server2: "⚔️ HM Server", players: "Players", statusLabel: "Status", checking: "● Checking...", newsTitle: "📰 Latest News" },
+  ja: { loading: "ネットワーク確認中...", topAd: "📢 広告：サーバー募集中！QQグループへ。", blockDesc: "海外専用ノードです。セキュリティのため認証してください。", btnMain: "🚀 中国本土メインへ", btnSub: "🔗 中国本土サブへ", divider: "または認証", btnVerify: "🧩 認証開始", brand: "幻域", navStatus: "状態", navNews: "ニュース", navConnect: "接続", navRules: "ルール", heroTitle: "幻域へようこそ", heroDesc: "Java & 統合版 クロスプレイ", mainServer: "メイン", port: "ポート", statusTitle: "📊 リアルタイム状態", server1: "🔮 幻域メイン", server2: "⚔️ HM サーバー", players: "オンライン", statusLabel: "稼働状態", checking: "● 確認中...", newsTitle: "📰 最新ニュース" },
+  ko: { loading: "네트워크 확인 중...", topAd: "📢 광고: 서버 모집 중! QQ 그룹 참여.", blockDesc: "해외 전용 노드입니다. 보안을 위해 인증하세요.", btnMain: "🚀 중국 본토 메인", btnSub: "🔗 중국 본토 서브", divider: "또는 인증", btnVerify: "🧩 인증 시작", brand: "환역", navStatus: "상태", navNews: "뉴스", navConnect: "연결", navRules: "규칙", heroTitle: "환역에 오신 것을 환영합니다", heroDesc: "Java & 베드락 크로스 플레이", mainServer: "메인", port: "포트", statusTitle: "📊 실시간 상태", server1: "🔮 환역 메인", server2: "⚔️ HM 서버", players: "접속자 수", statusLabel: "상태", checking: "● 확인 중...", newsTitle: "📰 최신 뉴스" },
+  ru: { loading: "Проверка сети...", topAd: "📢 Реклама: Набор на сервер! Вступайте в QQ.", blockDesc: "Зарубежный узел. Для безопасности пройдите проверку.", btnMain: "🚀 Основной сайт CN", btnSub: "🔗 Доп. сайт CN", divider: "или проверка", btnVerify: "🧩 Начать CAPTCHA", brand: "HuanYu", navStatus: "Статус", navNews: "Новости", navConnect: "Подключение", navRules: "Правила", heroTitle: "Добро пожаловать в HuanYu", heroDesc: "Java & Bedrock Cross-play", mainServer: "Основной", port: "Порт", statusTitle: "📊 Статус", server1: "🔮 HuanYu Main", server2: "⚔️ HM Сервер", players: "Игроки", statusLabel: "Статус", checking: "● Проверка...", newsTitle: "📰 Новости" }
 };
 
 function setLanguage(lang) {
@@ -315,6 +338,82 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // =========================================================
+// 🕵️ 设备指纹信息收集 (完全本地读取)
+// =========================================================
+function collectDeviceInfo() {
+  const grid = document.getElementById('sysInfoGrid');
+  if(!grid) return;
+
+  // 基础信息
+  const ua = navigator.userAgent;
+  let os = "Unknown", browser = "Unknown";
+  if (ua.indexOf("Windows") !== -1) os = "Windows";
+  else if (ua.indexOf("Mac OS") !== -1) os = "macOS";
+  else if (ua.indexOf("Android") !== -1) os = "Android";
+  else if (ua.indexOf("iPhone") !== -1 || ua.indexOf("iPad") !== -1) os = "iOS";
+  else if (ua.indexOf("Linux") !== -1) os = "Linux";
+
+  if (ua.indexOf("Edg") !== -1) browser = "Edge";
+  else if (ua.indexOf("Chrome") !== -1) browser = "Chrome";
+  else if (ua.indexOf("Firefox") !== -1) browser = "Firefox";
+  else if (ua.indexOf("Safari") !== -1) browser = "Safari";
+
+  const info = [
+    { key: "操作系统 (OS)", val: os },
+    { key: "浏览器内核", val: browser },
+    { key: "屏幕分辨率", val: `${window.screen.width} x ${window.screen.height}` },
+    { key: "浏览器窗口尺寸", val: `${window.innerWidth} x ${window.innerHeight}` },
+    { key: "设备像素比 (DPR)", val: window.devicePixelRatio },
+    { key: "CPU 核心数", val: navigator.hardwareConcurrency || "未知" },
+    { key: "设备内存 (GB)", val: navigator.deviceMemory ? navigator.deviceMemory + " GB" : "未知" },
+    { key: "首选语言", val: navigator.language },
+    { key: "网络状态", val: navigator.onLine ? "在线" : "离线" },
+    { key: "浏览器时区", val: Intl.DateTimeFormat().resolvedOptions().timeZone },
+    { key: "是否支持触摸", val: navigator.maxTouchPoints > 0 ? "是" : "否" }
+  ];
+
+  // 尝试检测电池状态 (部分浏览器支持)
+  if (navigator.getBattery) {
+    navigator.getBattery().then(battery => {
+      let level = Math.round(battery.level * 100);
+      let charging = battery.charging ? "充电中" : "未充电";
+      info.push({ key: "电池状态", val: `${level}% (${charging})` });
+      renderGrid();
+    });
+  }
+
+  // 尝试检测 Android Root 状态 (通过 UA 和特定特征模拟)
+  if (os === "Android") {
+    // 前端无法绝对准确判断 Root，这里做一些粗略的特征判断
+    let isRooted = "未知 (纯前端无法精确检测)";
+    // 如果有特定的 su 权限暴露或运行环境异常，某些内核会修改 UA
+    if (ua.indexOf("SuperSU") !== -1 || ua.indexOf("Magisk") !== -1) {
+      isRooted = "高风险 (疑似已 Root)";
+    } else if (typeof window.Android !== 'undefined') {
+      isRooted = "检测到 WebView 注入";
+    }
+    info.push({ key: "Root 状态", val: isRooted });
+    info.push({ key: "BL 锁状态", val: "未知 (需要原生 API)" });
+  }
+
+  function renderGrid() {
+    let html = "";
+    info.forEach(item => {
+      html += `
+        <div class="sys-info-item">
+          <span class="key">${item.key}</span>
+          <span class="val">${item.val}</span>
+        </div>
+      `;
+    });
+    grid.innerHTML = html;
+  }
+  
+  renderGrid();
+}
+
+
+// =========================================================
 // 🌍 网络检测与放行
 // =========================================================
 var isVerified = false, isBlocked = false;
@@ -331,6 +430,7 @@ function showContent() {
   blockPanel.style.display = 'none';    
   fetchAllMCStatus();      
   initAds(); 
+  collectDeviceInfo(); // 收集并渲染设备信息
   const lang = localStorage.getItem('site_lang') || 'en';
   renderNews(lang); 
 }
@@ -364,43 +464,51 @@ setTimeout(function() { if (!hasPassed && !isBlocked) showBlock(); }, 4500);
 
 
 // =========================================================
-// 🎥 模拟人脸识别逻辑 (纯本地不传数据)
+// 🎥 人脸识别逻辑
 // =========================================================
 let videoStream = null;
+let faceScanTimeout = null;
 
 async function startFaceScan() {
   blockPanel.style.display = 'none';
   const faceModal = document.getElementById('face-modal');
   const video = document.getElementById('video-feed');
   const actionText = document.getElementById('face-action');
+  const tipText = document.getElementById('face-tip');
   
   faceModal.style.display = 'flex';
-  actionText.textContent = "正在打开摄像头...";
-  
-  try {
-    // 请求前置摄像头
-    videoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
-    video.srcObject = videoStream;
-    
-    // 动作序列库
-    const actions = [
-      "请向左转头",
-      "请向右转头",
-      "请张张嘴",
-      "请点点头",
-      "请眨眨眼",
-      "请摇头"
-    ];
+  actionText.textContent = "正在获取摄像头权限...";
+  actionText.style.color = "#fff";
+  tipText.textContent = "请在 5 秒内点击“允许”，否则将自动取消并返回。";
+  tipText.style.color = "var(--text-muted)";
 
+  faceScanTimeout = setTimeout(() => {
+    if (videoStream === null) {
+      actionText.textContent = "⏱️ 授权超时，返回上一页...";
+      actionText.style.color = "#f59e0b";
+      setTimeout(() => {
+        closeFaceScan();
+        blockPanel.style.display = 'flex'; 
+      }, 1500);
+    }
+  }, 5000);
+
+  try {
+    videoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+    clearTimeout(faceScanTimeout);
+    video.srcObject = videoStream;
+    actionText.textContent = "请准备好，开始验证...";
+    tipText.textContent = "当前为纯本地模拟验证，不会记录或上传任何面部数据。";
+    tipText.style.color = "var(--text-muted)";
+    
+    const actions = ["请向左转头", "请向右转头", "请张张嘴", "请点点头", "请眨眨眼", "请摇头"];
     let step = 0;
-    const totalSteps = 3; // 随机做 3 个动作
+    const totalSteps = 3; 
 
     function nextAction() {
       if (step >= totalSteps) {
-        // 动作做完了（不管对错），直接通过
         actionText.textContent = "✅ 验证通过";
         actionText.style.color = "var(--success)";
-        
         setTimeout(() => {
           closeFaceScan();
           isVerified = true;
@@ -408,36 +516,29 @@ async function startFaceScan() {
         }, 1000);
         return;
       }
-
-      // 随机取一个动作
       const randomAction = actions[Math.floor(Math.random() * actions.length)];
       actionText.textContent = `(${step + 1}/3) ${randomAction}`;
       actionText.style.color = "#fff";
       step++;
-
-      // 给用户 2 秒钟去尝试做动作，做没做对不管，2秒后自动下一个
       setTimeout(nextAction, 2000); 
     }
-
-    // 摄像头打开后等 1 秒开始动作提示
     setTimeout(nextAction, 1000);
 
   } catch (err) {
-    // 如果用户拒绝摄像头权限，或者没摄像头，也直接放行(因为这是模拟)
-    actionText.textContent = "未检测到摄像头或已被拒绝，直接放行...";
-    actionText.style.color = "var(--warning)";
+    clearTimeout(faceScanTimeout);
+    actionText.textContent = "❌ 未授权摄像头或设备不支持";
+    actionText.style.color = "#ef4444";
     setTimeout(() => {
       closeFaceScan();
-      isVerified = true;
-      showContent();
-    }, 1500);
+      blockPanel.style.display = 'flex'; 
+    }, 2000);
   }
 }
 
 function closeFaceScan() {
   const faceModal = document.getElementById('face-modal');
   faceModal.style.display = 'none';
-  // 彻底关闭摄像头硬件
+  if (faceScanTimeout) clearTimeout(faceScanTimeout);
   if (videoStream) {
     videoStream.getTracks().forEach(track => track.stop());
     videoStream = null;
@@ -446,7 +547,7 @@ function closeFaceScan() {
 
 
 // =========================================================
-// 🧩 极验验证逻辑 (稳定图片源 + 真正随机题库)
+// 🧩 极验验证逻辑 (24张随机)
 // =========================================================
 let currentLevel = 1;
 const TOTAL_LEVELS = 20;
@@ -454,11 +555,46 @@ const captchaOverlay = document.getElementById('captcha-overlay');
 const captchaBox = document.getElementById('captchaBox');
 
 const stableImages = [
-  "https://picsum.photos/id/10/400/200", "https://picsum.photos/id/11/400/200", 
-  "https://picsum.photos/id/12/400/200", "https://picsum.photos/id/13/400/200",
-  "https://picsum.photos/id/14/400/200", "https://picsum.photos/id/15/400/200",
-  "https://picsum.photos/id/16/400/200", "https://picsum.photos/id/17/400/200"
+  "https://images.unsplash.com/photo-1506744626753-1fa44cf2035b?auto=format&fit=crop&w=400&q=80",
+  "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=400&q=80",
+  "https://images.unsplash.com/photo-1449034446853-66c86144b0ad?auto=format&fit=crop&w=400&q=80",
+  "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=400&q=80",
+  "https://images.unsplash.com/photo-1471479917193-f00955256257?auto=format&fit=crop&w=400&q=80",
+  "https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?auto=format&fit=crop&w=400&q=80"
 ];
+
+const gridImages = {
+  "汽车": [
+    "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=200&q=60",
+    "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=200&q=60",
+    "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=200&q=60",
+    "https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?w=200&q=60",
+    "https://images.unsplash.com/photo-1542282088-fe8426682b8f?w=200&q=60",
+    "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=200&q=60",
+    "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=200&q=60",
+    "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=200&q=60"
+  ],
+  "水果": [
+    "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=200&q=60",
+    "https://images.unsplash.com/photo-1560806887-1e4cd0b6fac6?w=200&q=60",
+    "https://images.unsplash.com/photo-1550258987-190a2d41a8ba?w=200&q=60",
+    "https://images.unsplash.com/photo-1519996529931-28324d5a630e?w=200&q=60",
+    "https://images.unsplash.com/photo-1587132137056-bfbf0166836e?w=200&q=60",
+    "https://images.unsplash.com/photo-1528825871115-3581a5387919?w=200&q=60",
+    "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=200&q=60",
+    "https://images.unsplash.com/photo-1619566636858-adf3ef46400b?w=200&q=60"
+  ],
+  "动物": [
+    "https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=200&q=60",
+    "https://images.unsplash.com/photo-1517849845537-4d257902454a?w=200&q=60",
+    "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=200&q=60",
+    "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=200&q=60",
+    "https://images.unsplash.com/photo-1592194996308-7b43878e84a6?w=200&q=60",
+    "https://images.unsplash.com/photo-1472491235688-bdc81a63246e?w=200&q=60",
+    "https://images.unsplash.com/photo-1529778458724-9c3d8b1b14a5?w=200&q=60",
+    "https://images.unsplash.com/photo-1552053831-71594a27632d?w=200&q=60"
+  ]
+};
 
 function startChallenge() { currentLevel = 1; nextLevel(); }
 
@@ -483,27 +619,31 @@ function renderCaptchaLevel() {
     const bgImg = stableImages[Math.floor(Math.random() * stableImages.length)];
     const targetX = Math.floor(Math.random() * 150) + 100; 
     html += `
-      <div class="puzzle-container" id="puzzle-bg" style="background-image: url('${bgImg}');">
+      <div class="puzzle-container">
+        <img src="${bgImg}" class="puzzle-bg-img">
         <div class="puzzle-hole" id="puzzle-hole" style="left: ${targetX}px;"></div>
-        <div class="puzzle-slice" id="puzzle-slice" style="left: 0px;"><img src="${bgImg}" style="object-position: -${targetX}px -50px;"></div>
+        <div class="puzzle-slice" id="puzzle-slice" style="left: 0px;">
+          <img src="${bgImg}" style="left: -${targetX}px; top: 0px;">
+        </div>
       </div>
       <div class="slider-wrap"><div class="slider-bar"><div class="slider-fill" id="sl-fill"></div><div class="slider-btn" id="sl-btn">→</div><div class="slider-text">拖动滑块完成拼图</div></div></div>`;
     captchaBox.innerHTML = html;
     initRealSlider(targetX);
   }
   else {
-    const themes = [
-      { name: "汽车", trueImg: "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=200&q=60", falseImgs: ["https://images.unsplash.com/photo-1471479917193-f00955256257?w=200&q=60", "https://images.unsplash.com/photo-1449034446853-66c86144b0ad?w=200&q=60", "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200&q=60", "https://images.unsplash.com/photo-1506744626753-1fa44cf2035b?w=200&q=60", "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=200&q=60"] },
-      { name: "水果", trueImg: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=200&q=60", falseImgs: ["https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=200&q=60", "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=200&q=60", "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=200&q=60", "https://images.unsplash.com/photo-1471479917193-f00955256257?w=200&q=60", "https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?w=200&q=60"] },
-      { name: "动物", trueImg: "https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=200&q=60", falseImgs: ["https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200&q=60", "https://images.unsplash.com/photo-1449034446853-66c86144b0ad?w=200&q=60", "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=200&q=60", "https://images.unsplash.com/photo-1506744626753-1fa44cf2035b?w=200&q=60", "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=200&q=60"] }
-    ];
+    const themes = ["汽车", "水果", "动物"];
     let theme = themes[Math.floor(Math.random() * themes.length)];
-    let imgs = [theme.trueImg, theme.trueImg, theme.trueImg, ...theme.falseImgs].sort(() => 0.5 - Math.random());
-    while(imgs.length < 9) imgs.push(theme.falseImgs[0]);
+    
+    let trueImages = gridImages[theme].sort(() => 0.5 - Math.random()).slice(0, 3);
+    let otherThemes = themes.filter(t => t !== theme);
+    let falseTheme = otherThemes[Math.floor(Math.random() * otherThemes.length)];
+    let falseImages = gridImages[falseTheme].sort(() => 0.5 - Math.random()).slice(0, 6);
+    
+    let imgs = [...trueImages, ...falseImages].sort(() => 0.5 - Math.random());
 
-    html += `<div class="captcha-content" style="padding-bottom:0;"><p style="text-align:left; margin-bottom:10px; font-size:13px;">请依次点击图中的 <b>${theme.name}</b></p></div>
+    html += `<div class="captcha-content" style="padding-bottom:0;"><p style="text-align:left; margin-bottom:10px; font-size:13px;">请依次点击图中的 <b>${theme}</b></p></div>
       <div class="grid-container">${imgs.map((src) => `<div class="grid-item" onclick="toggleGrid(this)"><img src="${src}"></div>`).join('')}</div>
-      <button class="grid-submit" id="gridBtn" onclick="verifyGrid('${theme.name}')">确认</button>`;
+      <button class="grid-submit" id="gridBtn" onclick="verifyGrid()">确认</button>`;
     captchaBox.innerHTML = html;
     window.toggleGrid = function(el) { el.classList.toggle('selected'); document.getElementById('gridBtn').classList.toggle('active', document.querySelectorAll('.grid-item.selected').length > 0); };
   }
@@ -518,10 +658,9 @@ function initRealSlider(targetX) {
   function end() { if(!isDragging) return; isDragging = false; document.removeEventListener('mousemove', move); document.removeEventListener('touchmove', move); document.removeEventListener('mouseup', end); document.removeEventListener('touchend', end); let currentLeft = parseInt(slice.style.left) || 0; if(Math.abs(currentLeft - targetX) < 5) { passLevel(); } else { alert('拼图位置不对，请重试！'); btn.style.left = '0px'; fill.style.width = '40px'; slice.style.left = '0px'; } }
 }
 
-window.verifyGrid = function(targetName) {
+window.verifyGrid = function() {
   let selectedEls = document.querySelectorAll('.grid-item.selected');
   if(selectedEls.length === 0) return;
-  // 不管对错，只要点了就放过，防止卡死
   passLevel(); 
 }
 
@@ -539,6 +678,42 @@ async function getServerStatus(apiUrl, playersElId, statusElId) {
 function fetchAllMCStatus() {
   getServerStatus("https://api.mcsrvstat.us/3/huanyu.fucku.top:36784", "players-huanyu", "status-huanyu");
   getServerStatus("https://api.mcsrvstat.us/3/hmfree.tooo.top:20063", "players-hm", "status-hm");
+}
+
+// 随机广告库
+const adDatabase = [
+  { img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=400&q=80", title: "Hypixel", desc: "Global Mini-Game Server", link: "https://hypixel.net" },
+  { img: "https://images.unsplash.com/photo-1607513746994-51f730a44832?auto=format&fit=crop&w=400&q=80", title: "2B2T", desc: "Oldest Anarchy Server", link: "https://2b2t.org" },
+  { img: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=400&q=80", title: "Steam", desc: "PC Game Platform", link: "https://store.steampowered.com" },
+  { img: "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?auto=format&fit=crop&w=400&q=80", title: "UU Booster", desc: "Game Accelerator", link: "https://uu.163.com" },
+  { img: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=400&q=80", title: "Mojang", desc: "MC Official Studio", link: "https://www.minecraft.net" },
+  { img: "https://images.unsplash.com/photo-1614680376573-df3480f0c6ff?auto=format&fit=crop&w=400&q=80", title: "Afdian", desc: "Support HuanYu", link: "https://afdian.com" },
+  { img: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=400&q=80", title: "Razer", desc: "Gaming Peripherals", link: "https://www.razer.com" },
+  { img: "https://images.unsplash.com/photo-1526509867162-5b0c0d1b4b33?auto=format&fit=crop&w=400&q=80", title: "Logitech", desc: "Gaming Mice", link: "https://www.logitech.com" }
+];
+
+function initAds() {
+  let shuffledAds = [...adDatabase, ...adDatabase, ...adDatabase].sort(() => 0.5 - Math.random());
+  
+  let leftHtml = "";
+  for(let i=0; i<10; i++) {
+    let ad = shuffledAds[i];
+    leftHtml += `<a href="${ad.link}" target="_blank" class="side-ad"><img src="${ad.img}" alt="Ad"><div class="ad-content"><div class="ad-title">${ad.title}</div><div class="ad-link">Go →</div></div></a>`;
+  }
+  document.getElementById('adLeftCol').innerHTML = leftHtml;
+
+  let rightHtml = "";
+  for(let i=10; i<20; i++) {
+    let ad = shuffledAds[i];
+    rightHtml += `<a href="${ad.link}" target="_blank" class="side-ad"><img src="${ad.img}" alt="Ad"><div class="ad-content"><div class="ad-title">${ad.title}</div><div class="ad-link">Go →</div></div></a>`;
+  }
+  document.getElementById('adRightCol').innerHTML = rightHtml;
+
+  let bottomAd = shuffledAds[20];
+  document.getElementById('adBottom').href = bottomAd.link;
+  document.getElementById('adBottom').querySelector('img').src = bottomAd.img;
+  document.getElementById('adBottom').querySelector('h4').textContent = bottomAd.title;
+  document.getElementById('adBottom').querySelector('p').textContent = bottomAd.desc;
 }
 
 // 新闻列表渲染
