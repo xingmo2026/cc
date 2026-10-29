@@ -12,7 +12,7 @@
 /* ========================================================= */
 :root {
   --bg: #0a0a0a; --card-bg: #141414; --border: #2a2a2a; --text: #ededed; 
-  --text-muted: #a1a1aa; --primary: #ff7ac6; --secondary: #a78bfa; --accent: #7dd3fc; --success: #4ade80;
+  --text-muted: #a1a1aa; --primary: #ff7ac6; --secondary: #a78bfa; --accent: #7dd3fc; --success: #4ade80; --danger: #ef4444;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
 body { background-color: var(--bg); color: var(--text); line-height: 1.5; overflow-x: hidden; }
@@ -27,9 +27,6 @@ a { text-decoration: none; color: inherit; }
 #loading-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: var(--bg); z-index: 999999; display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--text-muted); font-size: 14px; }
 .spinner { width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 12px; }
 
-/* ========================================================= */
-/* 🛡️ 安全验证页面 */
-/* ========================================================= */
 #block-panel { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0,0,0,0.95); z-index: 99999; flex-direction: column; justify-content: center; align-items: center; animation: fadeIn 0.3s ease; }
 #block-panel .box { border: 1px solid var(--border); padding: 40px 30px; border-radius: 16px; max-width: 90%; width: 420px; background: var(--card-bg); text-align: center; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden;}
 #block-panel .box::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent)); }
@@ -47,9 +44,6 @@ a { text-decoration: none; color: inherit; }
 .start-verify-btn:hover { background: #d4d4d8; transform: scale(0.98); }
 .btn-face { background: var(--accent); color: #000; }
 
-/* ========================================================= */
-/* 🧩 验证弹窗 */
-/* ========================================================= */
 #captcha-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 100000; justify-content: center; align-items: center; backdrop-filter: blur(10px); animation: fadeIn 0.2s ease; }
 .captcha-box { background: #1e1e1e; border: 1px solid #333; border-radius: 12px; width: 340px; padding: 0; box-shadow: 0 20px 40px rgba(0,0,0,0.6); text-align: center; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden; color: #fff; }
 .captcha-header { padding: 16px 20px; font-size: 16px; font-weight: 600; text-align: left; border-bottom: 1px solid #333; display: flex; align-items: center; gap: 8px; background: #252525; }
@@ -71,9 +65,6 @@ a { text-decoration: none; color: inherit; }
 .grid-submit { width: calc(100% - 40px); margin: 0 20px 20px; padding: 12px; background: var(--primary); color: #000; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; opacity: 0.5; transition: 0.2s; }
 .grid-submit.active { opacity: 1; }
 
-/* ========================================================= */
-/* 🎥 人脸识别弹窗 */
-/* ========================================================= */
 #face-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.9); z-index: 100001; justify-content: center; align-items: center; flex-direction: column; animation: fadeIn 0.3s ease; }
 .face-box { position: relative; width: 320px; height: 320px; border-radius: 50%; overflow: hidden; border: 4px solid var(--accent); box-shadow: 0 0 30px rgba(125,211,252,0.4); background: #000; }
 #video-feed { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
@@ -82,9 +73,6 @@ a { text-decoration: none; color: inherit; }
 .face-action-text { color: #fff; font-size: 20px; font-weight: bold; margin-top: 30px; margin-bottom: 20px; text-align: center; min-height: 30px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
 .face-tip { color: var(--text-muted); font-size: 13px; text-align: center; max-width: 300px; }
 
-/* ========================================================= */
-/* 🌐 多语言切换 & 其他 */
-/* ========================================================= */
 #lang-switcher { position: fixed; bottom: 30px; right: 30px; z-index: 999999; }
 .lang-btn { width: 50px; height: 50px; border-radius: 50%; background: var(--card-bg); border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; transition: 0.3s; }
 .lang-menu { position: absolute; bottom: 60px; right: 0; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 8px; display: none; flex-direction: column; gap: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); width: 140px; }
@@ -141,9 +129,6 @@ a { text-decoration: none; color: inherit; }
 .status-num { font-size: 18px; font-weight: 700; color: var(--text); font-family: monospace; }
 .status-on { color: var(--success); font-weight: 500; font-size: 12px; }
 
-/* ========================================================= */
-/* 🖥️ 设备指纹信息面板 (新增) */
-/* ========================================================= */
 .sys-info-panel { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-top: 20px; }
 .sys-info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
 .sys-info-item { display: flex; justify-content: space-between; padding: 10px 14px; background: #09090b; border-radius: 8px; border: 1px solid #222; font-size: 12px; }
@@ -276,16 +261,13 @@ a { text-decoration: none; color: inherit; }
         </div>
       </a>
 
-      <!-- 🖥️ 新增的设备信息指纹面板 (放在最底部) -->
       <section class="section" id="device-info">
         <h2 class="section-title">📱 设备及安全环境信息</h2>
         <div class="sys-info-panel">
           <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
             以下信息仅供安全验证参考，完全在您的本地浏览器计算提取，<b>绝不会上传至任何服务器</b>。
           </p>
-          <div class="sys-info-grid" id="sysInfoGrid">
-            <!-- JS 动态填充 -->
-          </div>
+          <div class="sys-info-grid" id="sysInfoGrid"></div>
         </div>
       </section>
     </div>
@@ -338,13 +320,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // =========================================================
-// 🕵️ 设备指纹信息收集 (完全本地读取)
+// 🕵️ 设备指纹信息收集
 // =========================================================
 function collectDeviceInfo() {
   const grid = document.getElementById('sysInfoGrid');
   if(!grid) return;
 
-  // 基础信息
   const ua = navigator.userAgent;
   let os = "Unknown", browser = "Unknown";
   if (ua.indexOf("Windows") !== -1) os = "Windows";
@@ -372,7 +353,6 @@ function collectDeviceInfo() {
     { key: "是否支持触摸", val: navigator.maxTouchPoints > 0 ? "是" : "否" }
   ];
 
-  // 尝试检测电池状态 (部分浏览器支持)
   if (navigator.getBattery) {
     navigator.getBattery().then(battery => {
       let level = Math.round(battery.level * 100);
@@ -382,16 +362,10 @@ function collectDeviceInfo() {
     });
   }
 
-  // 尝试检测 Android Root 状态 (通过 UA 和特定特征模拟)
   if (os === "Android") {
-    // 前端无法绝对准确判断 Root，这里做一些粗略的特征判断
     let isRooted = "未知 (纯前端无法精确检测)";
-    // 如果有特定的 su 权限暴露或运行环境异常，某些内核会修改 UA
-    if (ua.indexOf("SuperSU") !== -1 || ua.indexOf("Magisk") !== -1) {
-      isRooted = "高风险 (疑似已 Root)";
-    } else if (typeof window.Android !== 'undefined') {
-      isRooted = "检测到 WebView 注入";
-    }
+    if (ua.indexOf("SuperSU") !== -1 || ua.indexOf("Magisk") !== -1) isRooted = "高风险 (疑似已 Root)";
+    else if (typeof window.Android !== 'undefined') isRooted = "检测到 WebView 注入";
     info.push({ key: "Root 状态", val: isRooted });
     info.push({ key: "BL 锁状态", val: "未知 (需要原生 API)" });
   }
@@ -408,7 +382,6 @@ function collectDeviceInfo() {
     });
     grid.innerHTML = html;
   }
-  
   renderGrid();
 }
 
@@ -430,7 +403,7 @@ function showContent() {
   blockPanel.style.display = 'none';    
   fetchAllMCStatus();      
   initAds(); 
-  collectDeviceInfo(); // 收集并渲染设备信息
+  collectDeviceInfo(); 
   const lang = localStorage.getItem('site_lang') || 'en';
   renderNews(lang); 
 }
@@ -547,12 +520,13 @@ function closeFaceScan() {
 
 
 // =========================================================
-// 🧩 极验验证逻辑 (24张随机)
+// 🧩 严格极验验证逻辑 (40张图库 & 严格判定)
 // =========================================================
 let currentLevel = 1;
 const TOTAL_LEVELS = 20;
 const captchaOverlay = document.getElementById('captcha-overlay');
 const captchaBox = document.getElementById('captchaBox');
+let currentTargetTheme = ""; // 记录当前的目标类型（如汽车）
 
 const stableImages = [
   "https://images.unsplash.com/photo-1506744626753-1fa44cf2035b?auto=format&fit=crop&w=400&q=80",
@@ -563,7 +537,8 @@ const stableImages = [
   "https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?auto=format&fit=crop&w=400&q=80"
 ];
 
-const gridImages = {
+// 40 张高质量图库 (分类明确)
+const imageDatabase = {
   "汽车": [
     "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=200&q=60",
     "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=200&q=60",
@@ -572,7 +547,13 @@ const gridImages = {
     "https://images.unsplash.com/photo-1542282088-fe8426682b8f?w=200&q=60",
     "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=200&q=60",
     "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=200&q=60",
-    "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=200&q=60"
+    "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=200&q=60",
+    "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=200&q=60",
+    "https://images.unsplash.com/photo-1502877338535-766e1452684a?w=200&q=60",
+    "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=200&q=60",
+    "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=200&q=60",
+    "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=200&q=60",
+    "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=200&q=60"
   ],
   "水果": [
     "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=200&q=60",
@@ -582,7 +563,12 @@ const gridImages = {
     "https://images.unsplash.com/photo-1587132137056-bfbf0166836e?w=200&q=60",
     "https://images.unsplash.com/photo-1528825871115-3581a5387919?w=200&q=60",
     "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=200&q=60",
-    "https://images.unsplash.com/photo-1619566636858-adf3ef46400b?w=200&q=60"
+    "https://images.unsplash.com/photo-1619566636858-adf3ef46400b?w=200&q=60",
+    "https://images.unsplash.com/photo-1596363505729-4190a9506133?w=200&q=60",
+    "https://images.unsplash.com/photo-1557800636-894a64c1696f?w=200&q=60",
+    "https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=200&q=60",
+    "https://images.unsplash.com/photo-1570913149827-d2ac84ab3f9a?w=200&q=60",
+    "https://images.unsplash.com/photo-1603833665858-e61d17a86224?w=200&q=60"
   ],
   "动物": [
     "https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=200&q=60",
@@ -592,9 +578,17 @@ const gridImages = {
     "https://images.unsplash.com/photo-1592194996308-7b43878e84a6?w=200&q=60",
     "https://images.unsplash.com/photo-1472491235688-bdc81a63246e?w=200&q=60",
     "https://images.unsplash.com/photo-1529778458724-9c3d8b1b14a5?w=200&q=60",
-    "https://images.unsplash.com/photo-1552053831-71594a27632d?w=200&q=60"
+    "https://images.unsplash.com/photo-1552053831-71594a27632d?w=200&q=60",
+    "https://images.unsplash.com/photo-1535930891776-0c2dfb7fda1a?w=200&q=60",
+    "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200&q=60",
+    "https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=200&q=60",
+    "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=200&q=60",
+    "https://images.unsplash.com/photo-1573865526739-10659fec78a5?w=200&q=60"
   ]
 };
+
+// 记录随机抽出的 9 个图片数据
+let currentGridData = [];
 
 function startChallenge() { currentLevel = 1; nextLevel(); }
 
@@ -631,18 +625,19 @@ function renderCaptchaLevel() {
     initRealSlider(targetX);
   }
   else {
+    // 从40张库里洗牌并抽题
     const themes = ["汽车", "水果", "动物"];
-    let theme = themes[Math.floor(Math.random() * themes.length)];
+    currentTargetTheme = themes[Math.floor(Math.random() * themes.length)];
     
-    let trueImages = gridImages[theme].sort(() => 0.5 - Math.random()).slice(0, 3);
-    let otherThemes = themes.filter(t => t !== theme);
+    let trueImages = imageDatabase[currentTargetTheme].sort(() => 0.5 - Math.random()).slice(0, 3);
+    let otherThemes = themes.filter(t => t !== currentTargetTheme);
     let falseTheme = otherThemes[Math.floor(Math.random() * otherThemes.length)];
-    let falseImages = gridImages[falseTheme].sort(() => 0.5 - Math.random()).slice(0, 6);
+    let falseImages = imageDatabase[falseTheme].sort(() => 0.5 - Math.random()).slice(0, 6);
     
-    let imgs = [...trueImages, ...falseImages].sort(() => 0.5 - Math.random());
+    currentGridData = [...trueImages, ...falseImages].sort(() => 0.5 - Math.random());
 
-    html += `<div class="captcha-content" style="padding-bottom:0;"><p style="text-align:left; margin-bottom:10px; font-size:13px;">请依次点击图中的 <b>${theme}</b></p></div>
-      <div class="grid-container">${imgs.map((src) => `<div class="grid-item" onclick="toggleGrid(this)"><img src="${src}"></div>`).join('')}</div>
+    html += `<div class="captcha-content" style="padding-bottom:0;"><p style="text-align:left; margin-bottom:10px; font-size:13px;">请依次点击图中的 <b>${currentTargetTheme}</b></p></div>
+      <div class="grid-container">${currentGridData.map((src) => `<div class="grid-item" onclick="toggleGrid(this)"><img src="${src}"></div>`).join('')}</div>
       <button class="grid-submit" id="gridBtn" onclick="verifyGrid()">确认</button>`;
     captchaBox.innerHTML = html;
     window.toggleGrid = function(el) { el.classList.toggle('selected'); document.getElementById('gridBtn').classList.toggle('active', document.querySelectorAll('.grid-item.selected').length > 0); };
@@ -658,13 +653,40 @@ function initRealSlider(targetX) {
   function end() { if(!isDragging) return; isDragging = false; document.removeEventListener('mousemove', move); document.removeEventListener('touchmove', move); document.removeEventListener('mouseup', end); document.removeEventListener('touchend', end); let currentLeft = parseInt(slice.style.left) || 0; if(Math.abs(currentLeft - targetX) < 5) { passLevel(); } else { alert('拼图位置不对，请重试！'); btn.style.left = '0px'; fill.style.width = '40px'; slice.style.left = '0px'; } }
 }
 
+// 【核心修复】：严格的九宫格校验逻辑
 window.verifyGrid = function() {
   let selectedEls = document.querySelectorAll('.grid-item.selected');
   if(selectedEls.length === 0) return;
-  passLevel(); 
+
+  // 1. 找出所有属于目标类型的图片（真实的图片）
+  let trueImages = imageDatabase[currentTargetTheme];
+  
+  // 2. 检查用户选中的图片是否都在目标图库中
+  let isValid = true;
+  selectedEls.forEach(el => {
+    let imgSrc = el.querySelector('img').src;
+    // 如果用户选的图片不在当前题目的目标图库里，直接判定选错
+    if (!trueImages.includes(imgSrc)) {
+      isValid = false;
+    }
+  });
+
+  if (isValid) {
+    // 验证通过
+    passLevel();
+  } else {
+    // 验证失败
+    alert("验证失败，您选错了图片，请重新挑战！");
+    // 清空所有选中状态
+    document.querySelectorAll('.grid-item.selected').forEach(el => el.classList.remove('selected'));
+    document.getElementById('gridBtn').classList.remove('active');
+  }
 }
 
+
+// =========================================================
 // 服务器状态获取
+// =========================================================
 async function getServerStatus(apiUrl, playersElId, statusElId) {
   const statusEl = document.getElementById(statusElId), playersEl = document.getElementById(playersElId);
   if (!statusEl || !playersEl) return;
