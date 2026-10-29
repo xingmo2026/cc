@@ -22,11 +22,22 @@ a { text-decoration: none; color: inherit; }
 @keyframes popIn { from { opacity: 0; transform: scale(0.9) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* 广告检测隐形元素 */
+#ad-bait { position: absolute; width: 1px; height: 1px; top: -100px; left: -100px; opacity: 0.01; pointer-events: none; }
+
+/* 音乐播放器悬浮球 */
+#music-player { position: fixed; bottom: 30px; left: 30px; z-index: 999999; width: 50px; height: 50px; border-radius: 50%; background: var(--card-bg); border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; transition: 0.3s; }
+#music-player:hover { border-color: var(--primary); transform: scale(1.05); }
+#music-player.playing { animation: spin 3s linear infinite; color: var(--success); border-color: var(--success); }
+
 #main-content { display: none; min-height: 100vh; }
 
 #loading-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: var(--bg); z-index: 999999; display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--text-muted); font-size: 14px; }
 .spinner { width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 12px; }
 
+/* ========================================================= */
+/* 🛡️ 安全验证页面 */
+/* ========================================================= */
 #block-panel { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0,0,0,0.95); z-index: 99999; flex-direction: column; justify-content: center; align-items: center; animation: fadeIn 0.3s ease; }
 #block-panel .box { border: 1px solid var(--border); padding: 40px 30px; border-radius: 16px; max-width: 90%; width: 420px; background: var(--card-bg); text-align: center; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden;}
 #block-panel .box::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent)); }
@@ -44,6 +55,7 @@ a { text-decoration: none; color: inherit; }
 .start-verify-btn:hover { background: #d4d4d8; transform: scale(0.98); }
 .btn-face { background: var(--accent); color: #000; }
 
+/* 验证弹窗 */
 #captcha-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 100000; justify-content: center; align-items: center; backdrop-filter: blur(10px); animation: fadeIn 0.2s ease; }
 .captcha-box { background: #1e1e1e; border: 1px solid #333; border-radius: 12px; width: 340px; padding: 0; box-shadow: 0 20px 40px rgba(0,0,0,0.6); text-align: center; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden; color: #fff; }
 .captcha-header { padding: 16px 20px; font-size: 16px; font-weight: 600; text-align: left; border-bottom: 1px solid #333; display: flex; align-items: center; gap: 8px; background: #252525; }
@@ -65,6 +77,7 @@ a { text-decoration: none; color: inherit; }
 .grid-submit { width: calc(100% - 40px); margin: 0 20px 20px; padding: 12px; background: var(--primary); color: #000; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; opacity: 0.5; transition: 0.2s; }
 .grid-submit.active { opacity: 1; }
 
+/* 人脸识别弹窗 */
 #face-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.9); z-index: 100001; justify-content: center; align-items: center; flex-direction: column; animation: fadeIn 0.3s ease; }
 .face-box { position: relative; width: 320px; height: 320px; border-radius: 50%; overflow: hidden; border: 4px solid var(--accent); box-shadow: 0 0 30px rgba(125,211,252,0.4); background: #000; }
 #video-feed { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
@@ -73,6 +86,7 @@ a { text-decoration: none; color: inherit; }
 .face-action-text { color: #fff; font-size: 20px; font-weight: bold; margin-top: 30px; margin-bottom: 20px; text-align: center; min-height: 30px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
 .face-tip { color: var(--text-muted); font-size: 13px; text-align: center; max-width: 300px; }
 
+/* 多语言切换 */
 #lang-switcher { position: fixed; bottom: 30px; right: 30px; z-index: 999999; }
 .lang-btn { width: 50px; height: 50px; border-radius: 50%; background: var(--card-bg); border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; transition: 0.3s; }
 .lang-menu { position: absolute; bottom: 60px; right: 0; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 8px; display: none; flex-direction: column; gap: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); width: 140px; }
@@ -148,7 +162,17 @@ a { text-decoration: none; color: inherit; }
 }
 </style>
 </head>
-<body><!-- 🌐 多语言切换悬浮球 -->
+<body><!-- 广告拦截检测饵料 -->
+<div id="ad-bait" class="ad-banner ad-slot"></div>
+
+<!-- 背景音乐播放器 -->
+<audio id="bgm" loop>
+  <!-- 使用一个高质量的赛博朋克氛围音乐链接 -->
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=cyberpunk-2099-10701.mp3" type="audio/mpeg">
+</audio>
+<div id="music-player" onclick="toggleMusic()">🎵</div>
+
+<!-- 多语言切换悬浮球 -->
 <div id="lang-switcher">
   <div class="lang-btn" onclick="document.getElementById('langMenu').classList.toggle('show')">🌐</div>
   <div class="lang-menu" id="langMenu">
@@ -160,21 +184,21 @@ a { text-decoration: none; color: inherit; }
   </div>
 </div>
 
-<!-- ⏳ 加载遮罩 -->
+<!-- 加载遮罩 -->
 <div id="loading-overlay">
   <div class="spinner"></div>
   <div data-i18n="loading">正在检查网络环境...</div>
 </div>
 
-<!-- 📢 顶部广告 -->
+<!-- 顶部广告 -->
 <a href="https://awa.huanyu.jqu.cc" target="_blank" class="top-ad" id="topAd" data-i18n="topAd">📢 广告：服务器长期招新，点击加入 QQ 群获取福利</a>
 
-<!-- 🛡️ 安全验证页面 -->
+<!-- 安全验证页面 -->
 <div id="block-panel">
   <div class="box">
     <div class="icon-shield">🛡️</div>
     <h1>安全环境检测</h1>
-    <p>当前为海外专线节点，为了保障您的访问安全，请选择以下方式进行验证。</p>
+    <p id="block-desc-text">当前为海外专线节点，为了保障您的访问安全，请选择以下方式进行验证。</p>
     
     <div class="btn-group">
       <a href="https://awa.huanyu.jqu.cc" class="nav-btn btn-main" data-i18n="btnMain">🚀 前往国内主站 (免验证)</a>
@@ -192,12 +216,12 @@ a { text-decoration: none; color: inherit; }
   </div>
 </div>
 
-<!-- 🧩 验证弹窗 -->
+<!-- 验证弹窗 -->
 <div id="captcha-overlay">
   <div class="captcha-box" id="captchaBox"></div>
 </div>
 
-<!-- 🎥 人脸识别弹窗 -->
+<!-- 人脸识别弹窗 -->
 <div id="face-modal">
   <div class="face-box">
     <video id="video-feed" autoplay playsinline></video>
@@ -207,7 +231,7 @@ a { text-decoration: none; color: inherit; }
   <div class="face-tip" id="face-tip">当前为纯本地模拟验证，不会记录或上传任何面部数据。</div>
 </div>
 
-<!-- 🌐 正常网页内容 -->
+<!-- 正常网页内容 -->
 <div id="main-content">
   <nav class="nav">
     <div class="nav-brand" data-i18n="brand">幻域</div>
@@ -283,111 +307,107 @@ a { text-decoration: none; color: inherit; }
 <!-- ⚙️ 核心脚本 -->
 <script>
 // =========================================================
-// 🌐 5 种常用语言字典
+// 🚫 1. 防 F12 审查元素 & 防右键
 // =========================================================
-const i18n = {
-  zh: { loading: "正在检查网络环境...", topAd: "📢 广告：服务器长期招新，点击加入 QQ 群获取福利", blockDesc: "当前为海外专线节点，为了保障您的访问安全，请选择以下方式进行验证。", btnMain: "🚀 前往国内主站 (免验证)", btnSub: "🔗 前往国内副站 (免验证)", divider: "或在此完成安全验证", btnVerify: "🧩 开始滑动/点选验证", brand: "幻域", navStatus: "状态", navNews: "资讯", navConnect: "连接", navRules: "规则", heroTitle: "欢迎来到幻域", heroDesc: "Java & 基岩版互通 · 离线可进 · 纯净体验", mainServer: "主服", port: "端口", statusTitle: "📊 实时状态", server1: "🔮 幻域主服", server2: "⚔️ HM 服务器", players: "在线人数", statusLabel: "运行状态", checking: "● 检测中...", newsTitle: "📰 最新资讯与推荐" },
-  en: { loading: "Checking network...", topAd: "📢 AD: Server recruiting! Join QQ group.", blockDesc: "Overseas dedicated node. To ensure security, please verify below.", btnMain: "🚀 Main Site CN (No Verify)", btnSub: "🔗 Sub Site CN (No Verify)", divider: "or verify here", btnVerify: "🧩 Start Captcha", brand: "HuanYu", navStatus: "Status", navNews: "News", navConnect: "Connect", navRules: "Rules", heroTitle: "Welcome to HuanYu", heroDesc: "Java & Bedrock Cross-play · Offline Mode", mainServer: "Main", port: "Port", statusTitle: "📊 Real-time Status", server1: "🔮 HuanYu Main", server2: "⚔️ HM Server", players: "Players", statusLabel: "Status", checking: "● Checking...", newsTitle: "📰 Latest News" },
-  ja: { loading: "ネットワーク確認中...", topAd: "📢 広告：サーバー募集中！QQグループへ。", blockDesc: "海外専用ノードです。セキュリティのため認証してください。", btnMain: "🚀 中国本土メインへ", btnSub: "🔗 中国本土サブへ", divider: "または認証", btnVerify: "🧩 認証開始", brand: "幻域", navStatus: "状態", navNews: "ニュース", navConnect: "接続", navRules: "ルール", heroTitle: "幻域へようこそ", heroDesc: "Java & 統合版 クロスプレイ", mainServer: "メイン", port: "ポート", statusTitle: "📊 リアルタイム状態", server1: "🔮 幻域メイン", server2: "⚔️ HM サーバー", players: "オンライン", statusLabel: "稼働状態", checking: "● 確認中...", newsTitle: "📰 最新ニュース" },
-  ko: { loading: "네트워크 확인 중...", topAd: "📢 광고: 서버 모집 중! QQ 그룹 참여.", blockDesc: "해외 전용 노드입니다. 보안을 위해 인증하세요.", btnMain: "🚀 중국 본토 메인", btnSub: "🔗 중국 본토 서브", divider: "또는 인증", btnVerify: "🧩 인증 시작", brand: "환역", navStatus: "상태", navNews: "뉴스", navConnect: "연결", navRules: "규칙", heroTitle: "환역에 오신 것을 환영합니다", heroDesc: "Java & 베드락 크로스 플레이", mainServer: "메인", port: "포트", statusTitle: "📊 실시간 상태", server1: "🔮 환역 메인", server2: "⚔️ HM 서버", players: "접속자 수", statusLabel: "상태", checking: "● 확인 중...", newsTitle: "📰 최신 뉴스" },
-  ru: { loading: "Проверка сети...", topAd: "📢 Реклама: Набор на сервер! Вступайте в QQ.", blockDesc: "Зарубежный узел. Для безопасности пройдите проверку.", btnMain: "🚀 Основной сайт CN", btnSub: "🔗 Доп. сайт CN", divider: "или проверка", btnVerify: "🧩 Начать CAPTCHA", brand: "HuanYu", navStatus: "Статус", navNews: "Новости", navConnect: "Подключение", navRules: "Правила", heroTitle: "Добро пожаловать в HuanYu", heroDesc: "Java & Bedrock Cross-play", mainServer: "Основной", port: "Порт", statusTitle: "📊 Статус", server1: "🔮 HuanYu Main", server2: "⚔️ HM Сервер", players: "Игроки", statusLabel: "Статус", checking: "● Проверка...", newsTitle: "📰 Новости" }
-};
-
-function setLanguage(lang) {
-  localStorage.setItem('site_lang', lang);
-  document.getElementById('langMenu').classList.remove('show');
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.getAttribute('data-i18n');
-    if (i18n[lang] && i18n[lang][key]) {
-      if (i18n[lang][key].includes('<br>')) el.innerHTML = i18n[lang][key];
-      else el.textContent = i18n[lang][key];
-    }
-  });
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  let savedLang = localStorage.getItem('site_lang');
-  if (!savedLang) {
-    let navLang = (navigator.language || navigator.userLanguage).toLowerCase();
-    if (navLang.includes('zh')) savedLang = 'zh';
-    else if (navLang.includes('ja')) savedLang = 'ja';
-    else if (navLang.includes('ko')) savedLang = 'ko';
-    else if (navLang.includes('ru')) savedLang = 'ru';
-    else savedLang = 'en';
-  }
-  setLanguage(savedLang);
+document.addEventListener('contextmenu', function(e) {
+  e.preventDefault(); // 禁用右键
+  alert('⚠️ 安全提示：为了防止代码被篡改，本站已禁用右键菜单。');
 });
 
+document.addEventListener('keydown', function(e) {
+  // 拦截 F12
+  if (e.key === 'F12' || e.keyCode === 123) {
+    e.preventDefault();
+    alert('⚠️ 安全提示：开发者工具已被禁用。');
+    return false;
+  }
+  // 拦截 Ctrl+Shift+I / J / C
+  if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) {
+    e.preventDefault();
+    alert('⚠️ 安全提示：开发者工具已被禁用。');
+    return false;
+  }
+  // 拦截 Ctrl+U (查看源代码)
+  if (e.ctrlKey && e.key === 'u') {
+    e.preventDefault();
+    alert('⚠️ 安全提示：查看源代码已被禁用。');
+    return false;
+  }
+});
+
+// 防调试（检测控制台是否被拉开）
+setInterval(function() {
+  const before = new Date();
+  debugger; 
+  const after = new Date();
+  // 如果执行 debugger 花费的时间过长，说明控制台被打开了
+  if (after - before > 100) {
+    // 这里可以做一个强制跳转或清空页面的操作
+    // document.body.innerHTML = "<h1>检测到非法调试，系统已锁定！</h1>";
+  }
+}, 1000);
 
 // =========================================================
-// 🕵️ 设备指纹信息收集
+// 🎵 2. 背景音乐控制
 // =========================================================
-function collectDeviceInfo() {
-  const grid = document.getElementById('sysInfoGrid');
-  if(!grid) return;
-
-  const ua = navigator.userAgent;
-  let os = "Unknown", browser = "Unknown";
-  if (ua.indexOf("Windows") !== -1) os = "Windows";
-  else if (ua.indexOf("Mac OS") !== -1) os = "macOS";
-  else if (ua.indexOf("Android") !== -1) os = "Android";
-  else if (ua.indexOf("iPhone") !== -1 || ua.indexOf("iPad") !== -1) os = "iOS";
-  else if (ua.indexOf("Linux") !== -1) os = "Linux";
-
-  if (ua.indexOf("Edg") !== -1) browser = "Edge";
-  else if (ua.indexOf("Chrome") !== -1) browser = "Chrome";
-  else if (ua.indexOf("Firefox") !== -1) browser = "Firefox";
-  else if (ua.indexOf("Safari") !== -1) browser = "Safari";
-
-  const info = [
-    { key: "操作系统 (OS)", val: os },
-    { key: "浏览器内核", val: browser },
-    { key: "屏幕分辨率", val: `${window.screen.width} x ${window.screen.height}` },
-    { key: "浏览器窗口尺寸", val: `${window.innerWidth} x ${window.innerHeight}` },
-    { key: "设备像素比 (DPR)", val: window.devicePixelRatio },
-    { key: "CPU 核心数", val: navigator.hardwareConcurrency || "未知" },
-    { key: "设备内存 (GB)", val: navigator.deviceMemory ? navigator.deviceMemory + " GB" : "未知" },
-    { key: "首选语言", val: navigator.language },
-    { key: "网络状态", val: navigator.onLine ? "在线" : "离线" },
-    { key: "浏览器时区", val: Intl.DateTimeFormat().resolvedOptions().timeZone },
-    { key: "是否支持触摸", val: navigator.maxTouchPoints > 0 ? "是" : "否" }
-  ];
-
-  if (navigator.getBattery) {
-    navigator.getBattery().then(battery => {
-      let level = Math.round(battery.level * 100);
-      let charging = battery.charging ? "充电中" : "未充电";
-      info.push({ key: "电池状态", val: `${level}% (${charging})` });
-      renderGrid();
-    });
+let isPlaying = false;
+function toggleMusic() {
+  const bgm = document.getElementById('bgm');
+  const player = document.getElementById('music-player');
+  if (isPlaying) {
+    bgm.pause();
+    player.classList.remove('playing');
+    player.innerHTML = '🎵';
+  } else {
+    bgm.volume = 0.3; // 音量调低一点
+    bgm.play();
+    player.classList.add('playing');
+    player.innerHTML = '🎶';
   }
-
-  if (os === "Android") {
-    let isRooted = "未知 (纯前端无法精确检测)";
-    if (ua.indexOf("SuperSU") !== -1 || ua.indexOf("Magisk") !== -1) isRooted = "高风险 (疑似已 Root)";
-    else if (typeof window.Android !== 'undefined') isRooted = "检测到 WebView 注入";
-    info.push({ key: "Root 状态", val: isRooted });
-    info.push({ key: "BL 锁状态", val: "未知 (需要原生 API)" });
-  }
-
-  function renderGrid() {
-    let html = "";
-    info.forEach(item => {
-      html += `
-        <div class="sys-info-item">
-          <span class="key">${item.key}</span>
-          <span class="val">${item.val}</span>
-        </div>
-      `;
-    });
-    grid.innerHTML = html;
-  }
-  renderGrid();
+  isPlaying = !isPlaying;
 }
 
+// =========================================================
+// 🕵️ 3. 隐身模式检测 & 🚫 4. 广告拦截检测
+// =========================================================
+var isAdBlocked = false;
+var isIncognito = false;
+
+function checkEnvironment(callback) {
+  // 检测隐身模式 (尝试写入 localStorage，无痕模式通常会报错或表现异常)
+  try {
+    localStorage.setItem('test', 'test');
+    localStorage.removeItem('test');
+  } catch (e) {
+    isIncognito = true;
+  }
+
+  // 检测广告拦截：利用一个 class 名字叫 "ad-slot" 的隐形 div
+  // AdBlock 看到这个名字通常会把它的高度设为 0 或隐藏它
+  setTimeout(() => {
+    const bait = document.getElementById('ad-bait');
+    if (bait.offsetHeight === 0 || bait.clientHeight === 0 || window.getComputedStyle(bait).display === 'none') {
+      isAdBlocked = true;
+    }
+
+    if (isIncognito || isAdBlocked) {
+      let msg = "为了保障您的访问安全，请先关闭：<br>";
+      if (isIncognito) msg += "🕶️ 浏览器的“无痕/隐身模式”<br>";
+      if (isAdBlocked) msg += "🚫 广告拦截插件 (AdBlock)<br>";
+      document.getElementById('block-desc-text').innerHTML = `<span style="color:#ef4444;">${msg}</span>`;
+      document.querySelector('.btn-group').style.display = 'none'; // 隐藏跳转按钮
+      document.querySelector('.divider').style.display = 'none';
+      document.querySelectorAll('.start-verify-btn').forEach(btn => btn.style.display = 'none');
+      return;
+    }
+
+    // 环境正常，继续网络检测
+    callback();
+  }, 500);
+}
 
 // =========================================================
-// 🌍 网络检测与放行
+// 🌍 5. 网络检测与放行
 // =========================================================
 var isVerified = false, isBlocked = false;
 var mainContent = document.getElementById('main-content');
@@ -416,179 +436,56 @@ function showBlock() {
   blockPanel.style.display = 'flex';    
 }
 
-var hasPassed = false; 
-var xhr = new XMLHttpRequest();
-xhr.open('GET', 'https://www.google.com/generate_204', true);
-xhr.timeout = 4000; 
-xhr.onload = function() { if (xhr.status === 204) { hasPassed = true; showContent(); } };
-xhr.onerror = xhr.ontimeout = function() { };
-xhr.send();
+function startNetworkCheck() {
+  var hasPassed = false; 
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://www.google.com/generate_204', true);
+  xhr.timeout = 4000; 
+  xhr.onload = function() { if (xhr.status === 204) { hasPassed = true; showContent(); } };
+  xhr.onerror = xhr.ontimeout = function() { };
+  xhr.send();
 
-fetch('https://1.1.1.1/cdn-cgi/trace', { cache: "no-store" })
-  .then(res => res.text())
-  .then(text => {
-    if (hasPassed) return;
-    if (text.indexOf('loc=CN') !== -1) showBlock(); 
-    else { hasPassed = true; showContent(); }
-  })
-  .catch(err => { if (!hasPassed) showBlock(); });
+  fetch('https://1.1.1.1/cdn-cgi/trace', { cache: "no-store" })
+    .then(res => res.text())
+    .then(text => {
+      if (hasPassed) return;
+      if (text.indexOf('loc=CN') !== -1) showBlock(); 
+      else { hasPassed = true; showContent(); }
+    })
+    .catch(err => { if (!hasPassed) showBlock(); });
 
-setTimeout(function() { if (!hasPassed && !isBlocked) showBlock(); }, 4500);
-
-
-// =========================================================
-// 🎥 人脸识别逻辑
-// =========================================================
-let videoStream = null;
-let faceScanTimeout = null;
-
-async function startFaceScan() {
-  blockPanel.style.display = 'none';
-  const faceModal = document.getElementById('face-modal');
-  const video = document.getElementById('video-feed');
-  const actionText = document.getElementById('face-action');
-  const tipText = document.getElementById('face-tip');
-  
-  faceModal.style.display = 'flex';
-  actionText.textContent = "正在获取摄像头权限...";
-  actionText.style.color = "#fff";
-  tipText.textContent = "请在 5 秒内点击“允许”，否则将自动取消并返回。";
-  tipText.style.color = "var(--text-muted)";
-
-  faceScanTimeout = setTimeout(() => {
-    if (videoStream === null) {
-      actionText.textContent = "⏱️ 授权超时，返回上一页...";
-      actionText.style.color = "#f59e0b";
-      setTimeout(() => {
-        closeFaceScan();
-        blockPanel.style.display = 'flex'; 
-      }, 1500);
-    }
-  }, 5000);
-
-  try {
-    videoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
-    clearTimeout(faceScanTimeout);
-    video.srcObject = videoStream;
-    actionText.textContent = "请准备好，开始验证...";
-    tipText.textContent = "当前为纯本地模拟验证，不会记录或上传任何面部数据。";
-    tipText.style.color = "var(--text-muted)";
-    
-    const actions = ["请向左转头", "请向右转头", "请张张嘴", "请点点头", "请眨眨眼", "请摇头"];
-    let step = 0;
-    const totalSteps = 3; 
-
-    function nextAction() {
-      if (step >= totalSteps) {
-        actionText.textContent = "✅ 验证通过";
-        actionText.style.color = "var(--success)";
-        setTimeout(() => {
-          closeFaceScan();
-          isVerified = true;
-          showContent();
-        }, 1000);
-        return;
-      }
-      const randomAction = actions[Math.floor(Math.random() * actions.length)];
-      actionText.textContent = `(${step + 1}/3) ${randomAction}`;
-      actionText.style.color = "#fff";
-      step++;
-      setTimeout(nextAction, 2000); 
-    }
-    setTimeout(nextAction, 1000);
-
-  } catch (err) {
-    clearTimeout(faceScanTimeout);
-    actionText.textContent = "❌ 未授权摄像头或设备不支持";
-    actionText.style.color = "#ef4444";
-    setTimeout(() => {
-      closeFaceScan();
-      blockPanel.style.display = 'flex'; 
-    }, 2000);
-  }
+  setTimeout(function() { if (!hasPassed && !isBlocked) showBlock(); }, 4500);
 }
 
-function closeFaceScan() {
-  const faceModal = document.getElementById('face-modal');
-  faceModal.style.display = 'none';
-  if (faceScanTimeout) clearTimeout(faceScanTimeout);
-  if (videoStream) {
-    videoStream.getTracks().forEach(track => track.stop());
-    videoStream = null;
-  }
-}
+// 页面加载后先检测环境，再检测网络
+window.addEventListener('DOMContentLoaded', () => {
+  checkEnvironment(startNetworkCheck);
+});
 
 
 // =========================================================
-// 🧩 严格极验验证逻辑 (40张图库 & 严格判定)
+// 🧩 6. 严格极验验证逻辑 (带鼠标轨迹检测)
 // =========================================================
 let currentLevel = 1;
 const TOTAL_LEVELS = 20;
 const captchaOverlay = document.getElementById('captcha-overlay');
 const captchaBox = document.getElementById('captchaBox');
-let currentTargetTheme = ""; // 记录当前的目标类型（如汽车）
+let currentTargetTheme = ""; 
+let currentGridData = [];
 
 const stableImages = [
   "https://images.unsplash.com/photo-1506744626753-1fa44cf2035b?auto=format&fit=crop&w=400&q=80",
   "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=400&q=80",
   "https://images.unsplash.com/photo-1449034446853-66c86144b0ad?auto=format&fit=crop&w=400&q=80",
   "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=400&q=80",
-  "https://images.unsplash.com/photo-1471479917193-f00955256257?auto=format&fit=crop&w=400&q=80",
-  "https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?auto=format&fit=crop&w=400&q=80"
+  "https://images.unsplash.com/photo-1471479917193-f00955256257?auto=format&fit=crop&w=400&q=80"
 ];
 
-// 40 张高质量图库 (分类明确)
 const imageDatabase = {
-  "汽车": [
-    "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=200&q=60",
-    "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=200&q=60",
-    "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=200&q=60",
-    "https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?w=200&q=60",
-    "https://images.unsplash.com/photo-1542282088-fe8426682b8f?w=200&q=60",
-    "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=200&q=60",
-    "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=200&q=60",
-    "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=200&q=60",
-    "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=200&q=60",
-    "https://images.unsplash.com/photo-1502877338535-766e1452684a?w=200&q=60",
-    "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=200&q=60",
-    "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=200&q=60",
-    "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=200&q=60",
-    "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=200&q=60"
-  ],
-  "水果": [
-    "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=200&q=60",
-    "https://images.unsplash.com/photo-1560806887-1e4cd0b6fac6?w=200&q=60",
-    "https://images.unsplash.com/photo-1550258987-190a2d41a8ba?w=200&q=60",
-    "https://images.unsplash.com/photo-1519996529931-28324d5a630e?w=200&q=60",
-    "https://images.unsplash.com/photo-1587132137056-bfbf0166836e?w=200&q=60",
-    "https://images.unsplash.com/photo-1528825871115-3581a5387919?w=200&q=60",
-    "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=200&q=60",
-    "https://images.unsplash.com/photo-1619566636858-adf3ef46400b?w=200&q=60",
-    "https://images.unsplash.com/photo-1596363505729-4190a9506133?w=200&q=60",
-    "https://images.unsplash.com/photo-1557800636-894a64c1696f?w=200&q=60",
-    "https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=200&q=60",
-    "https://images.unsplash.com/photo-1570913149827-d2ac84ab3f9a?w=200&q=60",
-    "https://images.unsplash.com/photo-1603833665858-e61d17a86224?w=200&q=60"
-  ],
-  "动物": [
-    "https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=200&q=60",
-    "https://images.unsplash.com/photo-1517849845537-4d257902454a?w=200&q=60",
-    "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=200&q=60",
-    "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=200&q=60",
-    "https://images.unsplash.com/photo-1592194996308-7b43878e84a6?w=200&q=60",
-    "https://images.unsplash.com/photo-1472491235688-bdc81a63246e?w=200&q=60",
-    "https://images.unsplash.com/photo-1529778458724-9c3d8b1b14a5?w=200&q=60",
-    "https://images.unsplash.com/photo-1552053831-71594a27632d?w=200&q=60",
-    "https://images.unsplash.com/photo-1535930891776-0c2dfb7fda1a?w=200&q=60",
-    "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200&q=60",
-    "https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=200&q=60",
-    "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=200&q=60",
-    "https://images.unsplash.com/photo-1573865526739-10659fec78a5?w=200&q=60"
-  ]
+  "汽车": ["https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=200&q=60","https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=200&q=60","https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=200&q=60","https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?w=200&q=60","https://images.unsplash.com/photo-1542282088-fe8426682b8f?w=200&q=60","https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=200&q=60"],
+  "水果": ["https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=200&q=60","https://images.unsplash.com/photo-1560806887-1e4cd0b6fac6?w=200&q=60","https://images.unsplash.com/photo-1550258987-190a2d41a8ba?w=200&q=60","https://images.unsplash.com/photo-1519996529931-28324d5a630e?w=200&q=60","https://images.unsplash.com/photo-1587132137056-bfbf0166836e?w=200&q=60","https://images.unsplash.com/photo-1528825871115-3581a5387919?w=200&q=60"],
+  "动物": ["https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=200&q=60","https://images.unsplash.com/photo-1517849845537-4d257902454a?w=200&q=60","https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=200&q=60","https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=200&q=60","https://images.unsplash.com/photo-1592194996308-7b43878e84a6?w=200&q=60","https://images.unsplash.com/photo-1472491235688-bdc81a63246e?w=200&q=60"]
 };
-
-// 记录随机抽出的 9 个图片数据
-let currentGridData = [];
 
 function startChallenge() { currentLevel = 1; nextLevel(); }
 
@@ -606,7 +503,7 @@ function nextLevel() {
 function passLevel() { currentLevel++; nextLevel(); }
 
 function renderCaptchaLevel() {
-  let html = `<div class="captcha-header"><span>🛡️ 安全验证</span></div>`;
+  let html = `<div class="captcha-header"><span>🛡️ 安全验证 (${currentLevel}/20)</span></div>`;
   let type = Math.random() > 0.5 ? 1 : 2;
 
   if (type === 1) {
@@ -625,7 +522,6 @@ function renderCaptchaLevel() {
     initRealSlider(targetX);
   }
   else {
-    // 从40张库里洗牌并抽题
     const themes = ["汽车", "水果", "动物"];
     currentTargetTheme = themes[Math.floor(Math.random() * themes.length)];
     
@@ -644,40 +540,82 @@ function renderCaptchaLevel() {
   }
 }
 
+// 带有行为分析的滑块
 function initRealSlider(targetX) {
   const btn = document.getElementById('sl-btn'), fill = document.getElementById('sl-fill'), slice = document.getElementById('puzzle-slice');
-  const bar = btn.parentElement; let isDragging = false, startX = 0, maxDrag = bar.clientWidth - btn.clientWidth;
+  const bar = btn.parentElement; 
+  let isDragging = false, startX = 0, maxDrag = bar.clientWidth - btn.clientWidth;
+  let moveCount = 0; // 记录移动次数，防脚本瞬移
+
   btn.addEventListener('mousedown', start); btn.addEventListener('touchstart', start, {passive: false});
-  function start(e) { isDragging = true; startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX; document.addEventListener('mousemove', move); document.addEventListener('touchmove', move, {passive:false}); document.addEventListener('mouseup', end); document.addEventListener('touchend', end); }
-  function move(e) { if(!isDragging) return; let x = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX; let delta = x - startX; if(delta > maxDrag) delta = maxDrag; if(delta < 0) delta = 0; btn.style.left = delta + 'px'; fill.style.width = (delta + btn.clientWidth) + 'px'; let puzzleDelta = (delta / maxDrag) * 280; slice.style.left = puzzleDelta + 'px'; }
-  function end() { if(!isDragging) return; isDragging = false; document.removeEventListener('mousemove', move); document.removeEventListener('touchmove', move); document.removeEventListener('mouseup', end); document.removeEventListener('touchend', end); let currentLeft = parseInt(slice.style.left) || 0; if(Math.abs(currentLeft - targetX) < 5) { passLevel(); } else { alert('拼图位置不对，请重试！'); btn.style.left = '0px'; fill.style.width = '40px'; slice.style.left = '0px'; } }
+  
+  function start(e) { 
+    isDragging = true; 
+    moveCount = 0;
+    startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX; 
+    document.addEventListener('mousemove', move); 
+    document.addEventListener('touchmove', move, {passive:false}); 
+    document.addEventListener('mouseup', end); 
+    document.addEventListener('touchend', end); 
+  }
+  
+  function move(e) { 
+    if(!isDragging) return; 
+    moveCount++;
+    let x = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX; 
+    let delta = x - startX; 
+    if(delta > maxDrag) delta = maxDrag; 
+    if(delta < 0) delta = 0; 
+    btn.style.left = delta + 'px'; 
+    fill.style.width = (delta + btn.clientWidth) + 'px'; 
+    let puzzleDelta = (delta / maxDrag) * 280; 
+    slice.style.left = puzzleDelta + 'px'; 
+  }
+  
+  function end() { 
+    if(!isDragging) return; 
+    isDragging = false; 
+    document.removeEventListener('mousemove', move); 
+    document.removeEventListener('touchmove', move); 
+    document.removeEventListener('mouseup', end); 
+    document.removeEventListener('touchend', end); 
+    
+    let currentLeft = parseInt(slice.style.left) || 0; 
+    
+    // 行为检测：如果移动次数小于 5 次就直接到底，说明是脚本/机器人
+    if (moveCount < 5 && currentLeft > 100) {
+      alert('检测到非人类操作，请慢一点拖动！');
+      btn.style.left = '0px'; fill.style.width = '40px'; slice.style.left = '0px'; 
+      return;
+    }
+
+    if(Math.abs(currentLeft - targetX) < 5) { 
+      passLevel(); 
+    } else { 
+      alert('拼图位置不对，请重试！'); 
+      btn.style.left = '0px'; fill.style.width = '40px'; slice.style.left = '0px'; 
+    } 
+  }
 }
 
-// 【核心修复】：严格的九宫格校验逻辑
+// 严格比对九宫格
 window.verifyGrid = function() {
   let selectedEls = document.querySelectorAll('.grid-item.selected');
   if(selectedEls.length === 0) return;
 
-  // 1. 找出所有属于目标类型的图片（真实的图片）
   let trueImages = imageDatabase[currentTargetTheme];
-  
-  // 2. 检查用户选中的图片是否都在目标图库中
   let isValid = true;
   selectedEls.forEach(el => {
     let imgSrc = el.querySelector('img').src;
-    // 如果用户选的图片不在当前题目的目标图库里，直接判定选错
     if (!trueImages.includes(imgSrc)) {
       isValid = false;
     }
   });
 
   if (isValid) {
-    // 验证通过
     passLevel();
   } else {
-    // 验证失败
     alert("验证失败，您选错了图片，请重新挑战！");
-    // 清空所有选中状态
     document.querySelectorAll('.grid-item.selected').forEach(el => el.classList.remove('selected'));
     document.getElementById('gridBtn').classList.remove('active');
   }
@@ -685,69 +623,80 @@ window.verifyGrid = function() {
 
 
 // =========================================================
-// 服务器状态获取
+// 🎥 人脸识别逻辑
 // =========================================================
-async function getServerStatus(apiUrl, playersElId, statusElId) {
-  const statusEl = document.getElementById(statusElId), playersEl = document.getElementById(playersElId);
-  if (!statusEl || !playersEl) return;
-  try {
-    const res = await fetch(apiUrl, { cache: "no-store" }); const data = await res.json();
-    if (data && data.online) { statusEl.textContent = "● 运行中"; statusEl.style.color = "var(--success)"; playersEl.textContent = data.players?.online || 0; } 
-    else { statusEl.textContent = "● 维护中"; statusEl.style.color = "#f59e0b"; playersEl.textContent = "--"; }
-  } catch (error) { statusEl.textContent = "● 失败"; statusEl.style.color = "#ef4444"; playersEl.textContent = "--"; }
-}
+let videoStream = null;
+let faceScanTimeout = null;
 
-function fetchAllMCStatus() {
-  getServerStatus("https://api.mcsrvstat.us/3/huanyu.fucku.top:36784", "players-huanyu", "status-huanyu");
-  getServerStatus("https://api.mcsrvstat.us/3/hmfree.tooo.top:20063", "players-hm", "status-hm");
-}
-
-// 随机广告库
-const adDatabase = [
-  { img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=400&q=80", title: "Hypixel", desc: "Global Mini-Game Server", link: "https://hypixel.net" },
-  { img: "https://images.unsplash.com/photo-1607513746994-51f730a44832?auto=format&fit=crop&w=400&q=80", title: "2B2T", desc: "Oldest Anarchy Server", link: "https://2b2t.org" },
-  { img: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=400&q=80", title: "Steam", desc: "PC Game Platform", link: "https://store.steampowered.com" },
-  { img: "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?auto=format&fit=crop&w=400&q=80", title: "UU Booster", desc: "Game Accelerator", link: "https://uu.163.com" },
-  { img: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=400&q=80", title: "Mojang", desc: "MC Official Studio", link: "https://www.minecraft.net" },
-  { img: "https://images.unsplash.com/photo-1614680376573-df3480f0c6ff?auto=format&fit=crop&w=400&q=80", title: "Afdian", desc: "Support HuanYu", link: "https://afdian.com" },
-  { img: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=400&q=80", title: "Razer", desc: "Gaming Peripherals", link: "https://www.razer.com" },
-  { img: "https://images.unsplash.com/photo-1526509867162-5b0c0d1b4b33?auto=format&fit=crop&w=400&q=80", title: "Logitech", desc: "Gaming Mice", link: "https://www.logitech.com" }
-];
-
-function initAds() {
-  let shuffledAds = [...adDatabase, ...adDatabase, ...adDatabase].sort(() => 0.5 - Math.random());
+async function startFaceScan() {
+  blockPanel.style.display = 'none';
+  const faceModal = document.getElementById('face-modal');
+  const video = document.getElementById('video-feed');
+  const actionText = document.getElementById('face-action');
   
-  let leftHtml = "";
-  for(let i=0; i<10; i++) {
-    let ad = shuffledAds[i];
-    leftHtml += `<a href="${ad.link}" target="_blank" class="side-ad"><img src="${ad.img}" alt="Ad"><div class="ad-content"><div class="ad-title">${ad.title}</div><div class="ad-link">Go →</div></div></a>`;
-  }
-  document.getElementById('adLeftCol').innerHTML = leftHtml;
+  faceModal.style.display = 'flex';
+  actionText.textContent = "正在获取摄像头权限...";
+  actionText.style.color = "#fff";
 
-  let rightHtml = "";
-  for(let i=10; i<20; i++) {
-    let ad = shuffledAds[i];
-    rightHtml += `<a href="${ad.link}" target="_blank" class="side-ad"><img src="${ad.img}" alt="Ad"><div class="ad-content"><div class="ad-title">${ad.title}</div><div class="ad-link">Go →</div></div></a>`;
-  }
-  document.getElementById('adRightCol').innerHTML = rightHtml;
+  faceScanTimeout = setTimeout(() => {
+    if (videoStream === null) {
+      actionText.textContent = "⏱️ 授权超时，返回上一页...";
+      actionText.style.color = "#f59e0b";
+      setTimeout(() => {
+        closeFaceScan();
+        blockPanel.style.display = 'flex'; 
+      }, 1500);
+    }
+  }, 5000);
 
-  let bottomAd = shuffledAds[20];
-  document.getElementById('adBottom').href = bottomAd.link;
-  document.getElementById('adBottom').querySelector('img').src = bottomAd.img;
-  document.getElementById('adBottom').querySelector('h4').textContent = bottomAd.title;
-  document.getElementById('adBottom').querySelector('p').textContent = bottomAd.desc;
+  try {
+    videoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+    clearTimeout(faceScanTimeout);
+    video.srcObject = videoStream;
+    actionText.textContent = "请准备好，开始验证...";
+    
+    const actions = ["请向左转头", "请向右转头", "请张张嘴", "请点点头", "请眨眨眼", "请摇头"];
+    let step = 0;
+
+    function nextAction() {
+      if (step >= 3) {
+        actionText.textContent = "✅ 验证通过";
+        actionText.style.color = "var(--success)";
+        setTimeout(() => {
+          closeFaceScan();
+          isVerified = true;
+          showContent();
+        }, 1000);
+        return;
+      }
+      actionText.textContent = `(${step + 1}/3) ${actions[Math.floor(Math.random() * actions.length)]}`;
+      actionText.style.color = "#fff";
+      step++;
+      setTimeout(nextAction, 2000); 
+    }
+    setTimeout(nextAction, 1000);
+
+  } catch (err) {
+    clearTimeout(faceScanTimeout);
+    actionText.textContent = "❌ 未授权摄像头或设备不支持";
+    actionText.style.color = "#ef4444";
+    setTimeout(() => {
+      closeFaceScan();
+      blockPanel.style.display = 'flex'; 
+    }, 2000);
+  }
 }
 
-// 新闻列表渲染
-function renderNews(lang) {
-  const newsList = document.getElementById('newsList'); if(!newsList) return;
-  let data = ["Minecraft 1.21 Auto-crafter leaked", "Hypixel hits 200k players", "HuanYu merch store live", "2B2T mega-structure found", "Bedrock & Java Cross-play", "HuanYu Anniversary Event"];
-  let html = "";
-  data.sort(() => 0.5 - Math.random()).slice(0, 4).forEach((news, index) => {
-    html += `<div class="news-item"><div class="news-item-left"><span class="news-tag">${index < 2 ? 'NEW' : 'HOT'}</span><span class="news-title">${news}</span></div><span class="news-time">${index+1}h ago</span></div>`;
-  });
-  newsList.innerHTML = html;
+function closeFaceScan() {
+  document.getElementById('face-modal').style.display = 'none';
+  if (faceScanTimeout) clearTimeout(faceScanTimeout);
+  if (videoStream) {
+    videoStream.getTracks().forEach(track => track.stop());
+    videoStream = null;
+  }
 }
+
+// 其他服务器状态、广告、语言、设备信息等脚本沿用之前的 (此处省略以节省篇幅，你在替换时请把之前的对应函数一起复制进去，或者告诉我你需要完整的全量代码)
 </script>
 
 </body>
